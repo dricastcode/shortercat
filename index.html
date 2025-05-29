@@ -138,8 +138,10 @@
 
         .theme-buttons {
             display: flex;
-            flex-direction: column;
-            gap: 15px;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            align-items: center;
         }
 
         .search-container {
@@ -203,25 +205,117 @@
             opacity: 0.8;
         }
 
+        /* Updated Circular Theme Button Styles */
         .theme-btn {
-            padding: 8px 16px;
-            border: 2px solid;
-            border-radius: 20px;
+            width: 50px;
+            height: 50px;
+            border: 3px solid transparent;
+            border-radius: 50%;
             cursor: pointer;
-            font-size: 0.9em;
             transition: all 0.3s ease;
-            background: transparent;
-            font-family: inherit;
+            position: relative;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            background: none;
+            padding: 0;
         }
 
         .theme-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transform: scale(1.15);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
         }
 
         .theme-btn.active {
+            border-color: currentColor;
+            transform: scale(1.1);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Individual theme button colors */
+        .theme-btn.light-btn {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 50%, #e9ecef 100%);
+            border-color: #6c757d;
+        }
+
+        .theme-btn.light-btn.active {
+            border-color: #333333;
+        }
+
+        .theme-btn.dark-btn {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #3a3a3a 100%);
+            border-color: #6c757d;
+        }
+
+        .theme-btn.dark-btn.active {
+            border-color: #e0e0e0;
+        }
+
+        .theme-btn.blue-btn {
+            background: linear-gradient(135deg, #0f1419 0%, #1e3a5f 50%, #64b5f6 100%);
+            border-color: #6c757d;
+        }
+
+        .theme-btn.blue-btn.active {
+            border-color: #64b5f6;
+        }
+
+        .theme-btn.sepia-btn {
+            background: linear-gradient(135deg, #f4f1e8 0%, #8b7765 50%, #5d4e37 100%);
+            border-color: #6c757d;
+        }
+
+        .theme-btn.sepia-btn.active {
+            border-color: #8b7765;
+        }
+
+        /* Checkmark for active state */
+        .theme-btn::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 16px;
             font-weight: bold;
-            transform: scale(1.05);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+        }
+
+        .theme-btn.active::after {
+            opacity: 1;
+        }
+
+        .theme-btn.light-btn::after {
+            color: #333333;
+            text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
+        }
+
+        /* Tooltip for theme buttons */
+        .theme-btn {
+            position: relative;
+        }
+
+        .theme-btn[data-theme]::before {
+            content: attr(data-theme);
+            position: absolute;
+            bottom: -35px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            z-index: 1002;
+        }
+
+        .theme-btn:hover::before {
+            opacity: 1;
         }
 
         .catechism {
@@ -278,21 +372,6 @@
             box-shadow: -4px 0 12px rgba(0, 0, 0, 0.1);
         }
 
-        body.light .theme-btn {
-            border-color: #333333;
-            color: #333333;
-        }
-
-        body.light .theme-btn:hover {
-            background: #333333;
-            color: #ffffff;
-        }
-
-        body.light .theme-btn.active {
-            background: #333333;
-            color: #ffffff;
-        }
-
         body.light .search-box {
             border-color: #333333;
             color: #333333;
@@ -337,21 +416,6 @@
         body.dark .theme-menu {
             background: #2d2d2d;
             box-shadow: -4px 0 12px rgba(0, 0, 0, 0.3);
-        }
-
-        body.dark .theme-btn {
-            border-color: #e0e0e0;
-            color: #e0e0e0;
-        }
-
-        body.dark .theme-btn:hover {
-            background: #e0e0e0;
-            color: #1a1a1a;
-        }
-
-        body.dark .theme-btn.active {
-            background: #e0e0e0;
-            color: #1a1a1a;
         }
 
         body.dark .search-box {
@@ -400,21 +464,6 @@
             box-shadow: -4px 0 12px rgba(30, 58, 95, 0.3);
         }
 
-        body.blue .theme-btn {
-            border-color: #64b5f6;
-            color: #64b5f6;
-        }
-
-        body.blue .theme-btn:hover {
-            background: #64b5f6;
-            color: #0f1419;
-        }
-
-        body.blue .theme-btn.active {
-            background: #64b5f6;
-            color: #0f1419;
-        }
-
         body.blue .search-box {
             border-color: #64b5f6;
             color: #e1f5fe;
@@ -461,21 +510,6 @@
             box-shadow: -4px 0 12px rgba(139, 119, 101, 0.2);
         }
 
-        body.sepia .theme-btn {
-            border-color: #8b7765;
-            color: #8b7765;
-        }
-
-        body.sepia .theme-btn:hover {
-            background: #8b7765;
-            color: #f4f1e8;
-        }
-
-        body.sepia .theme-btn.active {
-            background: #8b7765;
-            color: #f4f1e8;
-        }
-
         body.sepia .search-box {
             border-color: #8b7765;
             color: #5d4e37;
@@ -512,12 +546,12 @@
             }
 
             .theme-buttons {
-                gap: 8px;
+                gap: 15px;
             }
 
             .theme-btn {
-                padding: 6px 12px;
-                font-size: 0.85em;
+                width: 45px;
+                height: 45px;
             }
 
             .answer {
@@ -557,10 +591,10 @@
         <div class="theme-menu" id="themeMenu">
             <h2>Choose Your Theme</h2>
             <div class="theme-buttons">
-                <button class="theme-btn active" onclick="setTheme('light')">Light</button>
-                <button class="theme-btn" onclick="setTheme('dark')">Dark</button>
-                <button class="theme-btn" onclick="setTheme('blue')">Blue</button>
-                <button class="theme-btn" onclick="setTheme('sepia')">Sepia</button>
+                <button class="theme-btn light-btn active" onclick="setTheme('light')" data-theme="Light"></button>
+                <button class="theme-btn dark-btn" onclick="setTheme('dark')" data-theme="Dark"></button>
+                <button class="theme-btn blue-btn" onclick="setTheme('blue')" data-theme="Blue"></button>
+                <button class="theme-btn sepia-btn" onclick="setTheme('sepia')" data-theme="Sepia"></button>
             </div>
         </div>
 
@@ -1347,7 +1381,7 @@
             });
 
             // Set active button
-            const activeBtn = document.querySelector(`[onclick="setTheme('${theme}')"]`);
+            const activeBtn = document.querySelector(`.theme-btn.${theme}-btn`);
             if (activeBtn) {
                 activeBtn.classList.add('active');
             }
@@ -1457,83 +1491,83 @@
             answer.innerHTML = answer.textContent;
         }
 
-    function escapeRegex(string) {
-        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    }
+        function escapeRegex(string) {
+            return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        }
 
-    function clearSearch() {
-    const searchInput = document.getElementById('searchInput');
-    searchInput.value = '';
-    performSearch('');
-    searchInput.focus();
-    }
+        function clearSearch() {
+            const searchInput = document.getElementById('searchInput');
+            searchInput.value = '';
+            performSearch('');
+            searchInput.focus();
+        }
 
-    // Event listeners
-    document.addEventListener('DOMContentLoaded', function() {
-        // Restore theme from localStorage if available
-        try {
-            const savedTheme = localStorage.getItem('shortercat-theme');
-            if (savedTheme && savedTheme !== currentTheme) {
-                setTheme(savedTheme);
-            }
-        } catch (e) {}
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Restore theme from localStorage if available
+            try {
+                const savedTheme = localStorage.getItem('shortercat-theme');
+                if (savedTheme && savedTheme !== currentTheme) {
+                    setTheme(savedTheme);
+                }
+            } catch (e) {}
 
-        // Add smooth scroll behavior
-        document.documentElement.style.scrollBehavior = 'smooth';
+            // Add smooth scroll behavior
+            document.documentElement.style.scrollBehavior = 'smooth';
 
-        // Initialize search
-        initializeSearch();
+            // Initialize search
+            initializeSearch();
 
-        // Hamburger menu
-        document.getElementById('hamburger').addEventListener('click', toggleMenu);
-        document.getElementById('menuOverlay').addEventListener('click', closeMenu);
+            // Hamburger menu
+            document.getElementById('hamburger').addEventListener('click', toggleMenu);
+            document.getElementById('menuOverlay').addEventListener('click', closeMenu);
 
-        // Search functionality
-        const searchInput = document.getElementById('searchInput');
-        const clearButton = document.getElementById('clearSearch');
+            // Search functionality
+            const searchInput = document.getElementById('searchInput');
+            const clearButton = document.getElementById('clearSearch');
 
-        searchInput.addEventListener('input', function(e) {
-    performSearch(e.target.value);
-    });
+            searchInput.addEventListener('input', function(e) {
+                performSearch(e.target.value);
+            });
 
-    clearButton.addEventListener('click', clearSearch);
+            clearButton.addEventListener('click', clearSearch);
 
-    // Keyboard shortcuts
-    document.addEventListener('keydown', function(e) {
-    // Escape to close menu
-    if (e.key === 'Escape') {
-    closeMenu();
-    }
+            // Keyboard shortcuts
+            document.addEventListener('keydown', function(e) {
+                // Escape to close menu
+                if (e.key === 'Escape') {
+                    closeMenu();
+                }
 
-    // Ctrl/Cmd + F to focus search
-    if ((e.ctrlKey || e.metaKey) && e.key === 'f') {
-    e.preventDefault();
-    searchInput.focus();
-    }
+                // Ctrl/Cmd + F to focus search
+                if ((e.ctrlKey || e.metaKey) && e.key === 'f') {
+                    e.preventDefault();
+                    searchInput.focus();
+                }
 
-    // Theme shortcuts
-    if (e.ctrlKey || e.metaKey) {
-    switch(e.key) {
-    case '1':
-    e.preventDefault();
-    setTheme('light');
-    break;
-    case '2':
-    e.preventDefault();
-    setTheme('dark');
-    break;
-    case '3':
-    e.preventDefault();
-    setTheme('blue');
-    break;
-    case '4':
-    e.preventDefault();
-    setTheme('sepia');
-    break;
-    }
-    }
-    });
-    });
+                // Theme shortcuts
+                if (e.ctrlKey || e.metaKey) {
+                    switch(e.key) {
+                        case '1':
+                            e.preventDefault();
+                            setTheme('light');
+                            break;
+                        case '2':
+                            e.preventDefault();
+                            setTheme('dark');
+                            break;
+                        case '3':
+                            e.preventDefault();
+                            setTheme('blue');
+                            break;
+                        case '4':
+                            e.preventDefault();
+                            setTheme('sepia');
+                            break;
+                    }
+                }
+            });
+        });
     </script>
 </body>
 
