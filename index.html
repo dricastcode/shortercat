@@ -1,0 +1,1520 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Children's Shorter Catechism</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            line-height: 1.6;
+            transition: all 0.3s ease;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: inherit;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .subtitle {
+            font-size: 1.1em;
+            font-style: italic;
+            opacity: 0.8;
+        }
+
+        .header-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            gap: 20px;
+        }
+
+        .hamburger {
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 1001;
+        }
+
+        .hamburger:hover {
+            background: rgba(128, 128, 128, 0.2);
+        }
+
+        .hamburger-lines {
+            width: 25px;
+            height: 3px;
+            margin: 5px 0;
+            transition: 0.3s;
+            transform-origin: center;
+        }
+
+        .hamburger.active .hamburger-lines:nth-child(1) {
+            transform: rotate(45deg) translate(6px, 6px);
+        }
+
+        .hamburger.active .hamburger-lines:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active .hamburger-lines:nth-child(3) {
+            transform: rotate(-45deg) translate(6px, -6px);
+        }
+
+        .menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .menu-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .theme-menu {
+            position: fixed;
+            top: 0;
+            right: -300px;
+            width: 300px;
+            height: 100%;
+            padding: 80px 30px 30px;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .theme-menu.active {
+            right: 0;
+        }
+
+        .theme-menu h2 {
+            margin-bottom: 25px;
+            font-size: 1.4em;
+            text-align: center;
+        }
+
+        .theme-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .search-container {
+            flex: 1;
+            max-width: 400px;
+            position: relative;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 12px 45px 12px 15px;
+            border: 2px solid;
+            border-radius: 25px;
+            font-size: 1em;
+            font-family: inherit;
+            background: transparent;
+            transition: all 0.3s ease;
+        }
+
+        .search-box:focus {
+            outline: none;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            opacity: 0.6;
+        }
+
+        .clear-search {
+            position: absolute;
+            right: 40px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            font-size: 1.2em;
+            cursor: pointer;
+            opacity: 0.6;
+            transition: opacity 0.3s ease;
+            display: none;
+        }
+
+        .clear-search:hover {
+            opacity: 1;
+        }
+
+        .clear-search.visible {
+            display: block;
+        }
+
+        .search-results {
+            margin-top: 20px;
+            font-size: 0.9em;
+            text-align: center;
+            opacity: 0.8;
+        }
+
+        .theme-btn {
+            padding: 8px 16px;
+            border: 2px solid;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+            background: transparent;
+            font-family: inherit;
+        }
+
+        .theme-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .theme-btn.active {
+            font-weight: bold;
+            transform: scale(1.05);
+        }
+
+        .catechism {
+            margin-top: 30px;
+        }
+
+        .qa-item {
+            margin-bottom: 25px;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid;
+            transition: all 0.3s ease;
+        }
+
+        .qa-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .question {
+            font-weight: bold;
+            margin-bottom: 8px;
+            font-size: 1.05em;
+        }
+
+        .answer {
+            margin-left: 20px;
+            font-size: 1em;
+        }
+
+        /* Theme Styles */
+
+        /* Default Theme - Light */
+        body.light {
+            background: #ffffff;
+            color: #333333;
+        }
+
+        body.light .container {
+            background: #fafafa;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        body.light header {
+            border-bottom-color: #333333;
+        }
+
+        body.light .hamburger-lines {
+            background: #333333;
+        }
+
+        body.light .theme-menu {
+            background: #ffffff;
+            box-shadow: -4px 0 12px rgba(0, 0, 0, 0.1);
+        }
+
+        body.light .theme-btn {
+            border-color: #333333;
+            color: #333333;
+        }
+
+        body.light .theme-btn:hover {
+            background: #333333;
+            color: #ffffff;
+        }
+
+        body.light .theme-btn.active {
+            background: #333333;
+            color: #ffffff;
+        }
+
+        body.light .search-box {
+            border-color: #333333;
+            color: #333333;
+        }
+
+        body.light .search-box::placeholder {
+            color: #666666;
+        }
+
+        body.light .search-icon {
+            fill: #333333;
+        }
+
+        body.light .clear-search {
+            color: #333333;
+        }
+
+        body.light .qa-item {
+            background: #ffffff;
+            border-left-color: #4a90e2;
+        }
+
+        /* Dark Theme */
+        body.dark {
+            background: #1a1a1a;
+            color: #e0e0e0;
+        }
+
+        body.dark .container {
+            background: #2d2d2d;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        body.dark header {
+            border-bottom-color: #e0e0e0;
+        }
+
+        body.dark .hamburger-lines {
+            background: #e0e0e0;
+        }
+
+        body.dark .theme-menu {
+            background: #2d2d2d;
+            box-shadow: -4px 0 12px rgba(0, 0, 0, 0.3);
+        }
+
+        body.dark .theme-btn {
+            border-color: #e0e0e0;
+            color: #e0e0e0;
+        }
+
+        body.dark .theme-btn:hover {
+            background: #e0e0e0;
+            color: #1a1a1a;
+        }
+
+        body.dark .theme-btn.active {
+            background: #e0e0e0;
+            color: #1a1a1a;
+        }
+
+        body.dark .search-box {
+            border-color: #e0e0e0;
+            color: #e0e0e0;
+        }
+
+        body.dark .search-box::placeholder {
+            color: #a0a0a0;
+        }
+
+        body.dark .search-icon {
+            fill: #e0e0e0;
+        }
+
+        body.dark .clear-search {
+            color: #e0e0e0;
+        }
+
+        body.dark .qa-item {
+            background: #3a3a3a;
+            border-left-color: #64b5f6;
+        }
+
+        /* Blue Theme */
+        body.blue {
+            background: #0f1419;
+            color: #e1f5fe;
+        }
+
+        body.blue .container {
+            background: #1e3a5f;
+            box-shadow: 0 4px 12px rgba(30, 58, 95, 0.3);
+        }
+
+        body.blue header {
+            border-bottom-color: #64b5f6;
+        }
+
+        body.blue .hamburger-lines {
+            background: #64b5f6;
+        }
+
+        body.blue .theme-menu {
+            background: #1e3a5f;
+            box-shadow: -4px 0 12px rgba(30, 58, 95, 0.3);
+        }
+
+        body.blue .theme-btn {
+            border-color: #64b5f6;
+            color: #64b5f6;
+        }
+
+        body.blue .theme-btn:hover {
+            background: #64b5f6;
+            color: #0f1419;
+        }
+
+        body.blue .theme-btn.active {
+            background: #64b5f6;
+            color: #0f1419;
+        }
+
+        body.blue .search-box {
+            border-color: #64b5f6;
+            color: #e1f5fe;
+        }
+
+        body.blue .search-box::placeholder {
+            color: #90caf9;
+        }
+
+        body.blue .search-icon {
+            fill: #64b5f6;
+        }
+
+        body.blue .clear-search {
+            color: #64b5f6;
+        }
+
+        body.blue .qa-item {
+            background: #2c5282;
+            border-left-color: #90caf9;
+        }
+
+        /* Sepia Theme */
+        body.sepia {
+            background: #f4f1e8;
+            color: #5d4e37;
+        }
+
+        body.sepia .container {
+            background: #faf6ed;
+            box-shadow: 0 4px 12px rgba(139, 119, 101, 0.2);
+        }
+
+        body.sepia header {
+            border-bottom-color: #8b7765;
+        }
+
+        body.sepia .hamburger-lines {
+            background: #8b7765;
+        }
+
+        body.sepia .theme-menu {
+            background: #faf6ed;
+            box-shadow: -4px 0 12px rgba(139, 119, 101, 0.2);
+        }
+
+        body.sepia .theme-btn {
+            border-color: #8b7765;
+            color: #8b7765;
+        }
+
+        body.sepia .theme-btn:hover {
+            background: #8b7765;
+            color: #f4f1e8;
+        }
+
+        body.sepia .theme-btn.active {
+            background: #8b7765;
+            color: #f4f1e8;
+        }
+
+        body.sepia .search-box {
+            border-color: #8b7765;
+            color: #5d4e37;
+        }
+
+        body.sepia .search-box::placeholder {
+            color: #8b7765;
+        }
+
+        body.sepia .search-icon {
+            fill: #8b7765;
+        }
+
+        body.sepia .clear-search {
+            color: #8b7765;
+        }
+
+        body.sepia .qa-item {
+            background: #f0ead6;
+            border-left-color: #cd853f;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            .theme-buttons {
+                gap: 8px;
+            }
+
+            .theme-btn {
+                padding: 6px 12px;
+                font-size: 0.85em;
+            }
+
+            .answer {
+                margin-left: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body class="light">
+    <div class="container">
+        <header>
+            <h1>Children's Shorter Catechism</h1>
+            <p class="subtitle">A guide to Christian faith and doctrine</p>
+        </header>
+
+        <div class="header-controls">
+            <div class="search-container">
+                <input type="text" class="search-box" placeholder="Search questions and answers..." id="searchInput">
+                <button class="clear-search" id="clearSearch">×</button>
+                <svg class="search-icon" viewBox="0 0 24 24">
+                    <path
+                        d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
+                </svg>
+            </div>
+
+            <div class="hamburger" id="hamburger">
+                <div class="hamburger-lines"></div>
+                <div class="hamburger-lines"></div>
+                <div class="hamburger-lines"></div>
+            </div>
+        </div>
+
+        <div class="search-results" id="searchResults"></div>
+
+        <div class="menu-overlay" id="menuOverlay"></div>
+        <div class="theme-menu" id="themeMenu">
+            <h2>Choose Your Theme</h2>
+            <div class="theme-buttons">
+                <button class="theme-btn active" onclick="setTheme('light')">Light</button>
+                <button class="theme-btn" onclick="setTheme('dark')">Dark</button>
+                <button class="theme-btn" onclick="setTheme('blue')">Blue</button>
+                <button class="theme-btn" onclick="setTheme('sepia')">Sepia</button>
+            </div>
+        </div>
+
+        <div class="catechism">
+            <div class="qa-item">
+                <div class="question">Q. 1. Who made you?</div>
+                <div class="answer">A. God.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 2. What else did God make?</div>
+                <div class="answer">A. God made all things.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 3. Why did God make you and all things?</div>
+                <div class="answer">A. For his own glory.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 4. How can you glorify God?</div>
+                <div class="answer">A. By loving him and doing what he commands.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 5. Why ought you to glorify God?</div>
+                <div class="answer">A. Because he made me and takes care of me.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 6. Are there more gods than one?</div>
+                <div class="answer">A. There is only one God.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 7. In how many persons does this one God exist?</div>
+                <div class="answer">A. In three persons.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 8. What are they?</div>
+                <div class="answer">A. The Father, the Son, and the Holy Ghost.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 9. What is God?</div>
+                <div class="answer">A. God is a Spirit, and has not a body like men.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 10. Where is God?</div>
+                <div class="answer">A. God is everywhere.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 11. Can you see God?</div>
+                <div class="answer">A. No; I cannot see God, but he always sees me.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 12. Does God know all things?</div>
+                <div class="answer">A. Yes; nothing can be hid from God.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 13. Can God do all things?</div>
+                <div class="answer">A. Yes; God can do all his holy will.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 14. Where do you learn how to love and obey God?</div>
+                <div class="answer">A. In the Bible alone.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 15. Who wrote the Bible?</div>
+                <div class="answer">A. Holy men who were taught by the Holy Spirit.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 16. Who were our first parents?</div>
+                <div class="answer">A. Adam and Eve.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 17. Of what were our first parents made?</div>
+                <div class="answer">A. God made the body of Adam out of the ground, and formed Eve from the body of
+                    Adam.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 18. What did God give Adam and Eve besides bodies?</div>
+                <div class="answer">A. He gave them souls that could never die.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 19. Have you a soul as well as a body?</div>
+                <div class="answer">A. Yes; I have a soul that can never die.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 20. How do you know that you have a soul?</div>
+                <div class="answer">A. Because the Bible tells me so.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 21. In what condition did God make Adam and Eve?</div>
+                <div class="answer">A. He made them holy and happy.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 22. What is a covenant?</div>
+                <div class="answer">A. An agreement between two or more persons.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 23. What covenant did God make with Adam?</div>
+                <div class="answer">A. The covenant of works.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 24. What was Adam bound to do by the covenant of works?</div>
+                <div class="answer">A. To obey God perfectly.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 25. What did God promise in the covenant of works?</div>
+                <div class="answer">A. To reward Adam with life if he obeyed him.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 26. What did God threaten in the covenant of works?</div>
+                <div class="answer">A. To punish Adam with death if he disobeyed.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 27. Did Adam keep the covenant of works?</div>
+                <div class="answer">A. No; he sinned against God.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 28. What is Sin?</div>
+                <div class="answer">A. Sin is any want of conformity unto, or transgression of the law of God.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 29. What is meant by want of conformity?</div>
+                <div class="answer">A. Not being or doing what God requires.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 30. What is meant by transgression?</div>
+                <div class="answer">A. Doing what God forbids.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 31. What was the sin of our first parents?</div>
+                <div class="answer">A. Eating the forbidden fruit.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 32. Who tempted them to this sin?</div>
+                <div class="answer">A. The devil tempted Eve, and she gave the fruit to Adam.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 33. What befell our first parents when they had sinned?</div>
+                <div class="answer">A. Instead of being holy and happy, they became sinful and miserable.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 34. Did Adam act for himself alone in the covenant of works?</div>
+                <div class="answer">A. No; he represented all his posterity.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 35. What effect had the sin of Adam on all mankind?</div>
+                <div class="answer">A. All mankind are born in a state of sin and misery.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 36. What is that sinful nature which we inherit from Adam called?</div>
+                <div class="answer">A. Original sin.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 37. What does every sin deserve?</div>
+                <div class="answer">A. The wrath and curse of God.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 38. Can any one go to heaven with this sinful nature?</div>
+                <div class="answer">A. No; our hearts must be changed before we can be fit for heaven.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 39. What is a change of heart called?</div>
+                <div class="answer">A. Regeneration.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 40. Who can change a sinner's heart?</div>
+                <div class="answer">A. The Holy Spirit alone.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 41. Can any one be saved through the covenant of works?</div>
+                <div class="answer">A. None can be saved through the covenant of works.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 42. Why can none be saved through the covenant of works?</div>
+                <div class="answer">A. Because all have broken it, and are condemned by it.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 43. With whom did God the Father make the covenant of grace?</div>
+                <div class="answer">A. With Christ, his eternal Son.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 44. Whom did Christ represent in the covenant of grace?</div>
+                <div class="answer">A. His elect people.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 45. What did Christ undertake in the covenant of grace?</div>
+                <div class="answer">A. To keep the whole law for his people, and to suffer the punishment due to their
+                    sins.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 46. Did our Lord Jesus Christ ever commit the least sin?</div>
+                <div class="answer">A. No; he was holy, harmless, and undefiled.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 47. How could the Son of God suffer?</div>
+                <div class="answer">A. Christ, the Son of God, became man that he might obey and suffer in our nature.
+                </div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 48. What is meant by the Atonement?</div>
+                <div class="answer">A. Christ's satisfying divine justice, by his sufferings and death, in the place of
+                    sinners.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 49. What did God the Father undertake in the covenant of grace?</div>
+                <div class="answer">A. To justify and sanctify those for whom Christ should die.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 50. What is justification?</div>
+                <div class="answer">A. It is God's forgiving sinners, and treating them as if they had never sinned.
+                </div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 51. What is sanctification?</div>
+                <div class="answer">A. It is God's making sinners holy in heart and conduct.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 52. For whom did Christ obey and suffer?</div>
+                <div class="answer">A. For those whom the Father had given him.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 53. What kind of life did Christ live on earth?</div>
+                <div class="answer">A. A life of poverty and suffering.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 54. What kind of death did Christ die?</div>
+                <div class="answer">A. The painful and shameful death of the cross.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 55. Who will be saved?</div>
+                <div class="answer">A. Only those who repent of sin, believe in Christ, and lead holy lives.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 56. What is it to repent?</div>
+                <div class="answer">A. To be sorry for sin, and to hate and forsake it because it is displeasing to God.
+                </div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 57. What is it to believe or have faith in Christ?</div>
+                <div class="answer">A. To trust in Christ alone for salvation.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 58. Can you repent and believe in Christ by your own power?</div>
+                <div class="answer">A. No; I can do nothing good without the help of God's Holy Spirit.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 59. How can you get the help of the Holy Spirit?</div>
+                <div class="answer">A. God has told us that we must pray to him for the Holy Spirit.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 60. How long ago is it since Christ died?</div>
+                <div class="answer">A. More than nineteen hundred years.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 61. How were pious persons saved before the coming of Christ?</div>
+                <div class="answer">A. By believing in a Savior to come.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 62. How did they show their faith?</div>
+                <div class="answer">A. By offering sacrifices on God's altar.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 63. What did these sacrifices represent?</div>
+                <div class="answer">A. Christ, the Lamb of God, who was to die for sinners.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 64. What offices has Christ?</div>
+                <div class="answer">A. Christ has three offices.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 65. What are they?</div>
+                <div class="answer">A. The offices of a prophet, of a priest, and of a king.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 66. How is Christ a prophet?</div>
+                <div class="answer">A. Because he teaches us the will of God.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 67. How is Christ a priest?</div>
+                <div class="answer">A. Because he died for our sins and pleads with God for us.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 68. How is Christ a king?</div>
+                <div class="answer">A. Because he rules over us and defends us.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 69. Why do you need Christ as a prophet?</div>
+                <div class="answer">A. Because I am ignorant.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 70. Why do you need Christ as a priest?</div>
+                <div class="answer">A. Because I am guilty.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 71. Why do you need Christ as a king?</div>
+                <div class="answer">A. Because I am weak and helpless.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 72. How many commandments did God give on Mount Sinai?</div>
+                <div class="answer">A. Ten commandments.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 73. What are the ten commandments sometimes called?</div>
+                <div class="answer">A. The Decalogue.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 74. What do the first four commandments teach?</div>
+                <div class="answer">A. Our duty to God.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 75. What do the last six commandments teach?</div>
+                <div class="answer">A. Our duty to our fellow men.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 76. What is the sum of the ten commandments?</div>
+                <div class="answer">A. To love God with all my heart, and my neighbor as myself.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 77. Who is your neighbor?</div>
+                <div class="answer">A. All my fellow men are my neighbors.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 78. Is God pleased with those who love and obey him?</div>
+                <div class="answer">A. Yes; he says, "I love them that love me."</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 79. Is God displeased with those who do not love and obey him?</div>
+                <div class="answer">A. Yes; "God is angry with the wicked every day."</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 80. What is the first commandment?</div>
+                <div class="answer">A. The first commandment is, Thou shalt have no other gods before me.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 81. What does the first commandment teach us?</div>
+                <div class="answer">A. To worship God alone.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 82. What is the second commandment?</div>
+                <div class="answer">A. The second commandment is, Thou shalt not make unto thee any graven image, or any
+                    likeness of any things that is in heaven above, or that is in the earth beneath, or that is in the
+                    water under the earth; thou shalt not bow down thyself to them, nor serve them: for I, the Lord thy
+                    God, am a jealous God, visiting the iniquity of the fathers upon the children unto the third and
+                    fourth generation of them that hate me; and showing mercy unto thousands of them that love me, and
+                    keep my commandments.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 83. What does the second commandment teach us?</div>
+                <div class="answer">A. To worship God in a proper manner, and to avoid idolatry.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 84. What is the third commandment?</div>
+                <div class="answer">A. The third commandment is, Thou shalt not take the name of the Lord thy God in
+                    vain: for the Lord will not hold him guiltless that taketh his name in vain.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 85. What does the third commandment teach me?</div>
+                <div class="answer">A. To reverence God's name, word, and works.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 86. What is the fourth commandment?</div>
+                <div class="answer">A. The fourth commandment is, Remember the Sabbath day to keep it holy. Six days
+                    shalt thou labor, and do all thy work, but the seventh day is the Sabbath of the Lord thy God; in it
+                    thou shalt not do any work, thou, nor thy son, nor thy daughter, nor thy manservant, nor thy
+                    maidservant, nor thy cattle, nor thy stranger that is within thy gates: for in six days the Lord
+                    made heaven and earth, the sea, and all that in them is, and rested the seventh day; wherefore the
+                    Lord blessed the Sabbath Day, and hallowed it.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 87. What does the fourth commandment teach us?</div>
+                <div class="answer">A. To keep the Sabbath holy.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 88. What day of the week is the Christian Sabbath?</div>
+                <div class="answer">A. The first day of the week, called the Lord's day.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 89. Why is it called the Lord's day?</div>
+                <div class="answer">A. Because on that day Christ rose from the dead.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 90. How should the Sabbath be spent?</div>
+                <div class="answer">A. In prayer and praise, in hearing and reading God's Word, and in doing good to our
+                    fellow men.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 91. What is the fifth commandment?</div>
+                <div class="answer">A. The fifth commandment is, Honor thy father and thy mother, that thy days may be
+                    long upon the land which the Lord thy God giveth thee.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 92. What does the fifth commandment teach me?</div>
+                <div class="answer">A. To love and obey our parents and teachers.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 93. What is the sixth commandment?</div>
+                <div class="answer">A. The sixth commandment is, Thou shalt not kill.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 94. What does the sixth commandment teach us?</div>
+                <div class="answer">A. To avoid angry passions.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 95. What is the seventh commandment?</div>
+                <div class="answer">A. The seventh commandment is, Thou shalt not commit adultery.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 96. What does the seventh commandment teach us?</div>
+                <div class="answer">A. To be pure in heart, language, and conduct.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 97. What is the eighth commandment?</div>
+                <div class="answer">A. The eighth commandment is, Thou shalt not steal.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 98. What does the eighth commandment teach us?</div>
+                <div class="answer">A. To be honest and industrious.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 99. What is the ninth commandment?</div>
+                <div class="answer">A. The ninth commandment is, Thou shalt not bear false witness against thy neighbor.
+                </div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 100. What does the ninth commandment teach us?</div>
+                <div class="answer">A. To tell the truth.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 101. What is the tenth commandment?</div>
+                <div class="answer">A. The tenth commandment is, Thou shalt not covet thy neighbor's house, thou shalt
+                    not covet thy neighbor's wife, nor his manservant, nor his maidservant, nor his ox, nor his ass, nor
+                    any thing that is thy neighbor's.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 102. What does the tenth commandment teach us?</div>
+                <div class="answer">A. To be content with our lot.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 103. Can any man keep these ten commandments perfectly?</div>
+                <div class="answer">A. No mere man, since the fall of Adam, ever did or can keep the ten commandments
+                    perfectly.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 104. Of what use are the ten commandments to us?</div>
+                <div class="answer">A. They teach us our duty, and show our need of a Savior.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 105. What is prayer?</div>
+                <div class="answer">A. Prayer is asking God for things which he has promised to give.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 106. In whose name should we pray?</div>
+                <div class="answer">A. Only in the name of Christ.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 107. What has Christ given us to teach us how to pray?</div>
+                <div class="answer">A. The Lord's Prayer.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 108. Repeat the Lord's Prayer.</div>
+                <div class="answer">A. Our Father which art in heaven, Hallowed be thy name. Thy kingdom come. Thy will
+                    be done in earth, as it is in heaven. Give us this day our daily bread. And forgive us our debts, as
+                    we forgive our debtors. And lead us not into temptation, but deliver us from evil: For thine is the
+                    kingdom, and the power, and the glory, for ever. Amen.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 109. How many petitions are there in The Lord's Prayer?</div>
+                <div class="answer">A. Six.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 110. What is the first petition?</div>
+                <div class="answer">A. "Hallowed be thy name."</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 111. What do we pray for in the first petition?</div>
+                <div class="answer">A. That God's name may be honored by us and all men.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 112. What is the second petition?</div>
+                <div class="answer">A. "Thy kingdom come."</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 113. What do we pray for in the second petition?</div>
+                <div class="answer">A. That the gospel may be preached in all the world, and believed and obeyed by us
+                    and all men.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 114. What is the third petition?</div>
+                <div class="answer">A. "Thy will be done in earth, as it is in heaven."</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 115. What do we pray for in the third petition?</div>
+                <div class="answer">A. That men on earth may serve God as the angels do in heaven.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 116. What is the fourth petition?</div>
+                <div class="answer">A. "Give us this day our daily bread."</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 117. What do we pray for in the fourth petition?</div>
+                <div class="answer">A. That God would give us all things needful for our bodies and souls.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 118. What is the fifth petition?</div>
+                <div class="answer">A. "And forgive us our debts, as we forgive our debtors."</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 119. What do we pray for in the fifth petition?</div>
+                <div class="answer">A. That God would pardon our sins for Christ's sake, and enable us to forgive those
+                    who have injured us.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 120. What is the sixth petition?</div>
+                <div class="answer">A. "And lead us not into temptation, but deliver us from evil."</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 121. What do we pray for in the sixth petition?</div>
+                <div class="answer">A. That God would keep us from sin.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 122. How many sacraments are there?</div>
+                <div class="answer">A. Two.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 123. What are they?</div>
+                <div class="answer">A. Baptism and the Lord's Supper.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 124. Who appointed these sacraments?</div>
+                <div class="answer">A. The Lord Jesus Christ.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 125. Why did Christ appoint these sacraments?</div>
+                <div class="answer">A. To distinguish his disciples from the world, and to comfort and strengthen them.
+                </div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 126. What sign is used in baptism?</div>
+                <div class="answer">A. The washing with water.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 127. What does this signify?</div>
+                <div class="answer">A. That we are cleansed from sin by the blood of Christ.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 128. In whose name are we baptized?</div>
+                <div class="answer">A. In the name of the Father, and of the Son, and of the Holy Ghost.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 129. Who are to be baptized?</div>
+                <div class="answer">A. Believers and their children.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 130. Why should infants be baptized?</div>
+                <div class="answer">A. Because they have a sinful nature and need a Savior.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 131. Does Christ care for little children?</div>
+                <div class="answer">A. Yes; for he says, "Suffer the little children to come unto me, and forbid them
+                    not: for of such is the kingdom of God."</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 132. To what does your baptism bind you?</div>
+                <div class="answer">A. To be a true follower of Christ.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 133. What is the Lord's Supper?</div>
+                <div class="answer">A. The eating of bread and drinking of wine in remembrance of the sufferings and
+                    death of Christ.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 134. What does the bread represent?</div>
+                <div class="answer">A. The body of Christ, broken for our sins.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 135. What does the wine represent?</div>
+                <div class="answer">A. The blood of Christ, shed for our salvation.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 136. Who should partake of the Lord's Supper?</div>
+                <div class="answer">A. Only those who repent of their sins, believe in Christ for salvation, and love
+                    their fellow men.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 137. Did Christ remain in the tomb after his crucifixion?</div>
+                <div class="answer">A. No; he rose from the tomb on the third day after his death.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 138. Where is Christ now?</div>
+                <div class="answer">A. In heaven, interceding for sinners.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 139. Will he come again?</div>
+                <div class="answer">A. Yes; at the last day Christ will come to judge the world.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 140. What becomes of men at death?</div>
+                <div class="answer">A. The body returns to dust, and the soul goes into the world of spirits.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 141. Will the bodies of the dead be raised to life again?</div>
+                <div class="answer">A. Yes; "The trumpet shall sound, and the dead shall be raised."</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 142. What will become of the wicked in the day of judgment?</div>
+                <div class="answer">A. They shall be cast into hell.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 143. What is hell?</div>
+                <div class="answer">A. A place of dreadful and endless torment.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 144. What will become of the righteous?</div>
+                <div class="answer">A. They shall be taken to heaven.</div>
+            </div>
+
+            <div class="qa-item">
+                <div class="question">Q. 145. What is heaven?</div>
+                <div class="answer">A. A glorious and happy place, where the righteous shall be forever with the Lord.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Theme management
+        let currentTheme = 'light';
+        let allQuestions = [];
+
+        function setTheme(theme) {
+            // Remove current theme class
+            document.body.className = theme;
+            currentTheme = theme;
+
+            // Update button states
+            const buttons = document.querySelectorAll('.theme-btn');
+            buttons.forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Set active button
+            const activeBtn = document.querySelector(`[onclick="setTheme('${theme}')"]`);
+            if (activeBtn) {
+                activeBtn.classList.add('active');
+            }
+
+            // Close menu after selection
+            closeMenu();
+        }
+
+        // Menu functionality
+        function toggleMenu() {
+            const hamburger = document.getElementById('hamburger');
+            const menuOverlay = document.getElementById('menuOverlay');
+            const themeMenu = document.getElementById('themeMenu');
+
+            hamburger.classList.toggle('active');
+            menuOverlay.classList.toggle('active');
+            themeMenu.classList.toggle('active');
+        }
+
+        function closeMenu() {
+            const hamburger = document.getElementById('hamburger');
+            const menuOverlay = document.getElementById('menuOverlay');
+            const themeMenu = document.getElementById('themeMenu');
+
+            hamburger.classList.remove('active');
+            menuOverlay.classList.remove('active');
+            themeMenu.classList.remove('active');
+        }
+
+        // Search functionality
+        function initializeSearch() {
+            // Collect all questions and answers
+            const qaItems = document.querySelectorAll('.qa-item');
+            allQuestions = Array.from(qaItems).map((item, index) => ({
+                element: item,
+                question: item.querySelector('.question').textContent,
+                answer: item.querySelector('.answer').textContent,
+                index: index
+            }));
+        }
+
+        function performSearch(query) {
+            const searchResults = document.getElementById('searchResults');
+
+            if (!query.trim()) {
+                // Show all questions and remove all highlights
+                allQuestions.forEach(item => {
+                    item.element.style.display = 'block';
+                    removeHighlights(item.element);
+                });
+                searchResults.textContent = '';
+                document.getElementById('clearSearch').classList.remove('visible');
+                return;
+            }
+
+            document.getElementById('clearSearch').classList.add('visible');
+
+            const lowerQuery = query.toLowerCase();
+            let visibleCount = 0;
+
+            allQuestions.forEach(item => {
+                const questionMatch = item.question.toLowerCase().includes(lowerQuery);
+                const answerMatch = item.answer.toLowerCase().includes(lowerQuery);
+
+                if (questionMatch || answerMatch) {
+                    item.element.style.display = 'block';
+                    visibleCount++;
+
+                    // Highlight matching text
+                    highlightText(item.element, query);
+                } else {
+                    item.element.style.display = 'none';
+                }
+            });
+
+            // Update search results
+            if (visibleCount === 0) {
+                searchResults.textContent = 'No questions found matching your search.';
+            } else if (visibleCount === 1) {
+                searchResults.textContent = '1 question found';
+            } else {
+                searchResults.textContent = `${visibleCount} questions found`;
+            }
+        }
+
+        function highlightText(element, query) {
+            const question = element.querySelector('.question');
+            const answer = element.querySelector('.answer');
+
+            // Remove existing highlights
+            removeHighlights(element);
+
+            if (query.trim()) {
+                const regex = new RegExp(`(${escapeRegex(query)})`, 'gi');
+
+                question.innerHTML = question.textContent.replace(regex, '<mark style="background-color: yellow; color: black;">$1</mark>');
+                answer.innerHTML = answer.textContent.replace(regex, '<mark style="background-color: yellow; color: black;">$1</mark>');
+            }
+        }
+
+        function removeHighlights(element) {
+            const question = element.querySelector('.question');
+            const answer = element.querySelector('.answer');
+
+            // Reset to plain text, removing any HTML tags including highlights
+            question.innerHTML = question.textContent;
+            answer.innerHTML = answer.textContent;
+        }
+
+    function escapeRegex(string) {
+        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+
+    function clearSearch() {
+    const searchInput = document.getElementById('searchInput');
+    searchInput.value = '';
+    performSearch('');
+    searchInput.focus();
+    }
+
+    // Event listeners
+    document.addEventListener('DOMContentLoaded', function() {
+    // Add smooth scroll behavior
+    document.documentElement.style.scrollBehavior = 'smooth';
+
+    // Initialize search
+    initializeSearch();
+
+    // Hamburger menu
+    document.getElementById('hamburger').addEventListener('click', toggleMenu);
+    document.getElementById('menuOverlay').addEventListener('click', closeMenu);
+
+    // Search functionality
+    const searchInput = document.getElementById('searchInput');
+    const clearButton = document.getElementById('clearSearch');
+
+    searchInput.addEventListener('input', function(e) {
+    performSearch(e.target.value);
+    });
+
+    clearButton.addEventListener('click', clearSearch);
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', function(e) {
+    // Escape to close menu
+    if (e.key === 'Escape') {
+    closeMenu();
+    }
+
+    // Ctrl/Cmd + F to focus search
+    if ((e.ctrlKey || e.metaKey) && e.key === 'f') {
+    e.preventDefault();
+    searchInput.focus();
+    }
+
+    // Theme shortcuts
+    if (e.ctrlKey || e.metaKey) {
+    switch(e.key) {
+    case '1':
+    e.preventDefault();
+    setTheme('light');
+    break;
+    case '2':
+    e.preventDefault();
+    setTheme('dark');
+    break;
+    case '3':
+    e.preventDefault();
+    setTheme('blue');
+    break;
+    case '4':
+    e.preventDefault();
+    setTheme('sepia');
+    break;
+    }
+    }
+    });
+    });
+    </script>
+</body>
+
+</html>
