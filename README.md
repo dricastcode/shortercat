@@ -1,1 +1,1 @@
-##Short Catechism Web App
+Short Catechism Web App
