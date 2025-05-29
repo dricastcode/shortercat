@@ -1328,6 +1328,11 @@
             document.body.className = theme;
             currentTheme = theme;
 
+            // Save theme to localStorage
+            try {
+                localStorage.setItem('shortercat-theme', theme);
+            } catch (e) {}
+
             // Update button states
             const buttons = document.querySelectorAll('.theme-btn');
             buttons.forEach(btn => {
@@ -1458,21 +1463,29 @@
 
     // Event listeners
     document.addEventListener('DOMContentLoaded', function() {
-    // Add smooth scroll behavior
-    document.documentElement.style.scrollBehavior = 'smooth';
+        // Restore theme from localStorage if available
+        try {
+            const savedTheme = localStorage.getItem('shortercat-theme');
+            if (savedTheme && savedTheme !== currentTheme) {
+                setTheme(savedTheme);
+            }
+        } catch (e) {}
 
-    // Initialize search
-    initializeSearch();
+        // Add smooth scroll behavior
+        document.documentElement.style.scrollBehavior = 'smooth';
 
-    // Hamburger menu
-    document.getElementById('hamburger').addEventListener('click', toggleMenu);
-    document.getElementById('menuOverlay').addEventListener('click', closeMenu);
+        // Initialize search
+        initializeSearch();
 
-    // Search functionality
-    const searchInput = document.getElementById('searchInput');
-    const clearButton = document.getElementById('clearSearch');
+        // Hamburger menu
+        document.getElementById('hamburger').addEventListener('click', toggleMenu);
+        document.getElementById('menuOverlay').addEventListener('click', closeMenu);
 
-    searchInput.addEventListener('input', function(e) {
+        // Search functionality
+        const searchInput = document.getElementById('searchInput');
+        const clearButton = document.getElementById('clearSearch');
+
+        searchInput.addEventListener('input', function(e) {
     performSearch(e.target.value);
     });
 
