@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Children's Catechism</title>
-    
+
     <!-- iOS Fullscreen Web App -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -45,7 +45,7 @@
                 padding: 20px;
                 background: var(--desktop-bg, #f0f0f0);
             }
-            
+
             .container {
                 border-radius: 10px;
                 box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -517,6 +517,12 @@
         body.blue .qa-item {
             background: #2c5282;
             border-left-color: #90caf9;
+        }
+
+        @media (min-width: 768px) {
+            body.blue .qa-item {
+                background: #3d6ba8;
+            }
         }
 
         /* Sepia Theme */
@@ -1416,7 +1422,7 @@
             // Save theme to localStorage
             try {
                 localStorage.setItem('shortercat-theme', theme);
-            } catch (e) {}
+            } catch (e) { }
 
             // Update button states
             const buttons = document.querySelectorAll('.theme-btn');
@@ -1547,14 +1553,14 @@
         }
 
         // Event listeners
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             // Restore theme from localStorage if available
             try {
                 const savedTheme = localStorage.getItem('shortercat-theme');
                 if (savedTheme && savedTheme !== currentTheme) {
                     setTheme(savedTheme);
                 }
-            } catch (e) {}
+            } catch (e) { }
 
             // Add smooth scroll behavior
             document.documentElement.style.scrollBehavior = 'smooth';
@@ -1570,14 +1576,14 @@
             const searchInput = document.getElementById('searchInput');
             const clearButton = document.getElementById('clearSearch');
 
-            searchInput.addEventListener('input', function(e) {
+            searchInput.addEventListener('input', function (e) {
                 performSearch(e.target.value);
             });
 
             clearButton.addEventListener('click', clearSearch);
 
             // Keyboard shortcuts
-            document.addEventListener('keydown', function(e) {
+            document.addEventListener('keydown', function (e) {
                 // Escape to close menu
                 if (e.key === 'Escape') {
                     closeMenu();
@@ -1591,7 +1597,7 @@
 
                 // Theme shortcuts
                 if (e.ctrlKey || e.metaKey) {
-                    switch(e.key) {
+                    switch (e.key) {
                         case '1':
                             e.preventDefault();
                             setTheme('light');
