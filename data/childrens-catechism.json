@@ -1,0 +1,887 @@
+{
+    "title": "Children's Shorter Catechism",
+    "description": "A simplified version of the Westminster Shorter Catechism designed for young learners",
+    "totalQuestions": 145,
+    "categories": [
+      "God's Nature",
+      "Scripture", 
+      "Creation & Fall",
+      "Salvation & Christ",
+      "Ten Commandments",
+      "Prayer",
+      "Sacraments",
+      "Last Things"
+    ],
+    "questions": [
+      {
+        "id": 1,
+        "question": "Who made you?",
+        "answer": "God.",
+        "category": "God's Nature"
+      },
+      {
+        "id": 2,
+        "question": "What else did God make?",
+        "answer": "God made all things.",
+        "category": "God's Nature"
+      },
+      {
+        "id": 3,
+        "question": "Why did God make you and all things?",
+        "answer": "For his own glory.",
+        "category": "God's Nature"
+      },
+      {
+        "id": 4,
+        "question": "How can you glorify God?",
+        "answer": "By loving him and doing what he commands.",
+        "category": "God's Nature"
+      },
+      {
+        "id": 5,
+        "question": "Why ought you to glorify God?",
+        "answer": "Because he made me and takes care of me.",
+        "category": "God's Nature"
+      },
+      {
+        "id": 6,
+        "question": "Are there more gods than one?",
+        "answer": "There is only one God.",
+        "category": "God's Nature"
+      },
+      {
+        "id": 7,
+        "question": "In how many persons does this one God exist?",
+        "answer": "In three persons.",
+        "category": "God's Nature"
+      },
+      {
+        "id": 8,
+        "question": "What are they?",
+        "answer": "The Father, the Son, and the Holy Ghost.",
+        "category": "God's Nature"
+      },
+      {
+        "id": 9,
+        "question": "What is God?",
+        "answer": "God is a Spirit, and has not a body like men.",
+        "category": "God's Nature"
+      },
+      {
+        "id": 10,
+        "question": "Where is God?",
+        "answer": "God is everywhere.",
+        "category": "God's Nature"
+      },
+      {
+        "id": 11,
+        "question": "Can you see God?",
+        "answer": "No; I cannot see God, but he always sees me.",
+        "category": "God's Nature"
+      },
+      {
+        "id": 12,
+        "question": "Does God know all things?",
+        "answer": "Yes; nothing can be hid from God.",
+        "category": "God's Nature"
+      },
+      {
+        "id": 13,
+        "question": "Can God do all things?",
+        "answer": "Yes; God can do all his holy will.",
+        "category": "God's Nature"
+      },
+      {
+        "id": 14,
+        "question": "Where do you learn how to love and obey God?",
+        "answer": "In the Bible alone.",
+        "category": "Scripture"
+      },
+      {
+        "id": 15,
+        "question": "Who wrote the Bible?",
+        "answer": "Holy men who were taught by the Holy Spirit.",
+        "category": "Scripture"
+      },
+      {
+        "id": 16,
+        "question": "Who were our first parents?",
+        "answer": "Adam and Eve.",
+        "category": "Creation & Fall"
+      },
+      {
+        "id": 17,
+        "question": "Of what were our first parents made?",
+        "answer": "God made the body of Adam out of the ground, and formed Eve from the body of Adam.",
+        "category": "Creation & Fall"
+      },
+      {
+        "id": 18,
+        "question": "What did God give Adam and Eve besides bodies?",
+        "answer": "He gave them souls that could never die.",
+        "category": "Creation & Fall"
+      },
+      {
+        "id": 19,
+        "question": "Have you a soul as well as a body?",
+        "answer": "Yes; I have a soul that can never die.",
+        "category": "Creation & Fall"
+      },
+      {
+        "id": 20,
+        "question": "How do you know that you have a soul?",
+        "answer": "Because the Bible tells me so.",
+        "category": "Creation & Fall"
+      },
+      {
+        "id": 21,
+        "question": "In what condition did God make Adam and Eve?",
+        "answer": "He made them holy and happy.",
+        "category": "Creation & Fall"
+      },
+      {
+        "id": 22,
+        "question": "What is a covenant?",
+        "answer": "An agreement between two or more persons.",
+        "category": "Creation & Fall"
+      },
+      {
+        "id": 23,
+        "question": "What covenant did God make with Adam?",
+        "answer": "The covenant of works.",
+        "category": "Creation & Fall"
+      },
+      {
+        "id": 24,
+        "question": "What was Adam bound to do by the covenant of works?",
+        "answer": "To obey God perfectly.",
+        "category": "Creation & Fall"
+      },
+      {
+        "id": 25,
+        "question": "What did God promise in the covenant of works?",
+        "answer": "To reward Adam with life if he obeyed him.",
+        "category": "Creation & Fall"
+      },
+      {
+        "id": 26,
+        "question": "What did God threaten in the covenant of works?",
+        "answer": "To punish Adam with death if he disobeyed.",
+        "category": "Creation & Fall"
+      },
+      {
+        "id": 27,
+        "question": "Did Adam keep the covenant of works?",
+        "answer": "No; he sinned against God.",
+        "category": "Creation & Fall"
+      },
+      {
+        "id": 28,
+        "question": "What is Sin?",
+        "answer": "Sin is any want of conformity unto, or transgression of the law of God.",
+        "category": "Creation & Fall"
+      },
+      {
+        "id": 29,
+        "question": "What is meant by want of conformity?",
+        "answer": "Not being or doing what God requires.",
+        "category": "Creation & Fall"
+      },
+      {
+        "id": 30,
+        "question": "What is meant by transgression?",
+        "answer": "Doing what God forbids.",
+        "category": "Creation & Fall"
+      },
+      {
+        "id": 31,
+        "question": "What was the sin of our first parents?",
+        "answer": "Eating the forbidden fruit.",
+        "category": "Creation & Fall"
+      },
+      {
+        "id": 32,
+        "question": "Who tempted them to this sin?",
+        "answer": "The devil tempted Eve, and she gave the fruit to Adam.",
+        "category": "Creation & Fall"
+      },
+      {
+        "id": 33,
+        "question": "What befell our first parents when they had sinned?",
+        "answer": "Instead of being holy and happy, they became sinful and miserable.",
+        "category": "Creation & Fall"
+      },
+      {
+        "id": 34,
+        "question": "Did Adam act for himself alone in the covenant of works?",
+        "answer": "No; he represented all his posterity.",
+        "category": "Creation & Fall"
+      },
+      {
+        "id": 35,
+        "question": "What effect had the sin of Adam on all mankind?",
+        "answer": "All mankind are born in a state of sin and misery.",
+        "category": "Creation & Fall"
+      },
+      {
+        "id": 36,
+        "question": "What is that sinful nature which we inherit from Adam called?",
+        "answer": "Original sin.",
+        "category": "Creation & Fall"
+      },
+      {
+        "id": 37,
+        "question": "What does every sin deserve?",
+        "answer": "The wrath and curse of God.",
+        "category": "Creation & Fall"
+      },
+      {
+        "id": 38,
+        "question": "Can any one go to heaven with this sinful nature?",
+        "answer": "No; our hearts must be changed before we can be fit for heaven.",
+        "category": "Creation & Fall"
+      },
+      {
+        "id": 39,
+        "question": "What is a change of heart called?",
+        "answer": "Regeneration.",
+        "category": "Creation & Fall"
+      },
+      {
+        "id": 40,
+        "question": "Who can change a sinner's heart?",
+        "answer": "The Holy Spirit alone.",
+        "category": "Creation & Fall"
+      },
+      {
+        "id": 41,
+        "question": "Can any one be saved through the covenant of works?",
+        "answer": "None can be saved through the covenant of works.",
+        "category": "Salvation & Christ"
+      },
+      {
+        "id": 42,
+        "question": "Why can none be saved through the covenant of works?",
+        "answer": "Because all have broken it, and are condemned by it.",
+        "category": "Salvation & Christ"
+      },
+      {
+        "id": 43,
+        "question": "With whom did God the Father make the covenant of grace?",
+        "answer": "With Christ, his eternal Son.",
+        "category": "Salvation & Christ"
+      },
+      {
+        "id": 44,
+        "question": "Whom did Christ represent in the covenant of grace?",
+        "answer": "His elect people.",
+        "category": "Salvation & Christ"
+      },
+      {
+        "id": 45,
+        "question": "What did Christ undertake in the covenant of grace?",
+        "answer": "To keep the whole law for his people, and to suffer the punishment due to their sins.",
+        "category": "Salvation & Christ"
+      },
+      {
+        "id": 46,
+        "question": "Did our Lord Jesus Christ ever commit the least sin?",
+        "answer": "No; he was holy, harmless, and undefiled.",
+        "category": "Salvation & Christ"
+      },
+      {
+        "id": 47,
+        "question": "How could the Son of God suffer?",
+        "answer": "Christ, the Son of God, became man that he might obey and suffer in our nature.",
+        "category": "Salvation & Christ"
+      },
+      {
+        "id": 48,
+        "question": "What is meant by the Atonement?",
+        "answer": "Christ's satisfying divine justice, by his sufferings and death, in the place of sinners.",
+        "category": "Salvation & Christ"
+      },
+      {
+        "id": 49,
+        "question": "What did God the Father undertake in the covenant of grace?",
+        "answer": "To justify and sanctify those for whom Christ should die.",
+        "category": "Salvation & Christ"
+      },
+      {
+        "id": 50,
+        "question": "What is justification?",
+        "answer": "It is God's forgiving sinners, and treating them as if they had never sinned.",
+        "category": "Salvation & Christ"
+      },
+      {
+        "id": 51,
+        "question": "What is sanctification?",
+        "answer": "It is God's making sinners holy in heart and conduct.",
+        "category": "Salvation & Christ"
+      },
+      {
+        "id": 52,
+        "question": "For whom did Christ obey and suffer?",
+        "answer": "For those whom the Father had given him.",
+        "category": "Salvation & Christ"
+      },
+      {
+        "id": 53,
+        "question": "What kind of life did Christ live on earth?",
+        "answer": "A life of poverty and suffering.",
+        "category": "Salvation & Christ"
+      },
+      {
+        "id": 54,
+        "question": "What kind of death did Christ die?",
+        "answer": "The painful and shameful death of the cross.",
+        "category": "Salvation & Christ"
+      },
+      {
+        "id": 55,
+        "question": "Who will be saved?",
+        "answer": "Only those who repent of sin, believe in Christ, and lead holy lives.",
+        "category": "Salvation & Christ"
+      },
+      {
+        "id": 56,
+        "question": "What is it to repent?",
+        "answer": "To be sorry for sin, and to hate and forsake it because it is displeasing to God.",
+        "category": "Salvation & Christ"
+      },
+      {
+        "id": 57,
+        "question": "What is it to believe or have faith in Christ?",
+        "answer": "To trust in Christ alone for salvation.",
+        "category": "Salvation & Christ"
+      },
+      {
+        "id": 58,
+        "question": "Can you repent and believe in Christ by your own power?",
+        "answer": "No; I can do nothing good without the help of God's Holy Spirit.",
+        "category": "Salvation & Christ"
+      },
+      {
+        "id": 59,
+        "question": "How can you get the help of the Holy Spirit?",
+        "answer": "God has told us that we must pray to him for the Holy Spirit.",
+        "category": "Salvation & Christ"
+      },
+      {
+        "id": 60,
+        "question": "How long ago is it since Christ died?",
+        "answer": "More than nineteen hundred years.",
+        "category": "Salvation & Christ"
+      },
+      {
+        "id": 61,
+        "question": "How were pious persons saved before the coming of Christ?",
+        "answer": "By believing in a Savior to come.",
+        "category": "Salvation & Christ"
+      },
+      {
+        "id": 62,
+        "question": "How did they show their faith?",
+        "answer": "By offering sacrifices on God's altar.",
+        "category": "Salvation & Christ"
+      },
+      {
+        "id": 63,
+        "question": "What did these sacrifices represent?",
+        "answer": "Christ, the Lamb of God, who was to die for sinners.",
+        "category": "Salvation & Christ"
+      },
+      {
+        "id": 64,
+        "question": "What offices has Christ?",
+        "answer": "Christ has three offices.",
+        "category": "Salvation & Christ"
+      },
+      {
+        "id": 65,
+        "question": "What are they?",
+        "answer": "The offices of a prophet, of a priest, and of a king.",
+        "category": "Salvation & Christ"
+      },
+      {
+        "id": 66,
+        "question": "How is Christ a prophet?",
+        "answer": "Because he teaches us the will of God.",
+        "category": "Salvation & Christ"
+      },
+      {
+        "id": 67,
+        "question": "How is Christ a priest?",
+        "answer": "Because he died for our sins and pleads with God for us.",
+        "category": "Salvation & Christ"
+      },
+      {
+        "id": 68,
+        "question": "How is Christ a king?",
+        "answer": "Because he rules over us and defends us.",
+        "category": "Salvation & Christ"
+      },
+      {
+        "id": 69,
+        "question": "Why do you need Christ as a prophet?",
+        "answer": "Because I am ignorant.",
+        "category": "Salvation & Christ"
+      },
+      {
+        "id": 70,
+        "question": "Why do you need Christ as a priest?",
+        "answer": "Because I am guilty.",
+        "category": "Salvation & Christ"
+      },
+      {
+        "id": 71,
+        "question": "Why do you need Christ as a king?",
+        "answer": "Because I am weak and helpless.",
+        "category": "Salvation & Christ"
+      },
+      {
+        "id": 72,
+        "question": "How many commandments did God give on Mount Sinai?",
+        "answer": "Ten commandments.",
+        "category": "Ten Commandments"
+      },
+      {
+        "id": 73,
+        "question": "What are the ten commandments sometimes called?",
+        "answer": "The Decalogue.",
+        "category": "Ten Commandments"
+      },
+      {
+        "id": 74,
+        "question": "What do the first four commandments teach?",
+        "answer": "Our duty to God.",
+        "category": "Ten Commandments"
+      },
+      {
+        "id": 75,
+        "question": "What do the last six commandments teach?",
+        "answer": "Our duty to our fellow men.",
+        "category": "Ten Commandments"
+      },
+      {
+        "id": 76,
+        "question": "What is the sum of the ten commandments?",
+        "answer": "To love God with all my heart, and my neighbor as myself.",
+        "category": "Ten Commandments"
+      },
+      {
+        "id": 77,
+        "question": "Who is your neighbor?",
+        "answer": "All my fellow men are my neighbors.",
+        "category": "Ten Commandments"
+      },
+      {
+        "id": 78,
+        "question": "Is God pleased with those who love and obey him?",
+        "answer": "Yes; he says, \"I love them that love me.\"",
+        "category": "Ten Commandments"
+      },
+      {
+        "id": 79,
+        "question": "Is God displeased with those who do not love and obey him?",
+        "answer": "Yes; \"God is angry with the wicked every day.\"",
+        "category": "Ten Commandments"
+      },
+      {
+        "id": 80,
+        "question": "What is the first commandment?",
+        "answer": "The first commandment is, Thou shalt have no other gods before me.",
+        "category": "Ten Commandments"
+      },
+      {
+        "id": 81,
+        "question": "What does the first commandment teach us?",
+        "answer": "To worship God alone.",
+        "category": "Ten Commandments"
+      },
+      {
+        "id": 82,
+        "question": "What is the second commandment?",
+        "answer": "The second commandment is, Thou shalt not make unto thee any graven image, or any likeness of any things that is in heaven above, or that is in the earth beneath, or that is in the water under the earth; thou shalt not bow down thyself to them, nor serve them: for I, the Lord thy God, am a jealous God, visiting the iniquity of the fathers upon the children unto the third and fourth generation of them that hate me; and showing mercy unto thousands of them that love me, and keep my commandments.",
+        "category": "Ten Commandments"
+      },
+      {
+        "id": 83,
+        "question": "What does the second commandment teach us?",
+        "answer": "To worship God in a proper manner, and to avoid idolatry.",
+        "category": "Ten Commandments"
+      },
+      {
+        "id": 84,
+        "question": "What is the third commandment?",
+        "answer": "The third commandment is, Thou shalt not take the name of the Lord thy God in vain: for the Lord will not hold him guiltless that taketh his name in vain.",
+        "category": "Ten Commandments"
+      },
+      {
+        "id": 85,
+        "question": "What does the third commandment teach me?",
+        "answer": "To reverence God's name, word, and works.",
+        "category": "Ten Commandments"
+      },
+      {
+        "id": 86,
+        "question": "What is the fourth commandment?",
+        "answer": "The fourth commandment is, Remember the Sabbath day to keep it holy. Six days shalt thou labor, and do all thy work, but the seventh day is the Sabbath of the Lord thy God; in it thou shalt not do any work, thou, nor thy son, nor thy daughter, nor thy manservant, nor thy maidservant, nor thy cattle, nor thy stranger that is within thy gates: for in six days the Lord made heaven and earth, the sea, and all that in them is, and rested the seventh day; wherefore the Lord blessed the Sabbath Day, and hallowed it.",
+        "category": "Ten Commandments"
+      },
+      {
+        "id": 87,
+        "question": "What does the fourth commandment teach us?",
+        "answer": "To keep the Sabbath holy.",
+        "category": "Ten Commandments"
+      },
+      {
+        "id": 88,
+        "question": "What day of the week is the Christian Sabbath?",
+        "answer": "The first day of the week, called the Lord's day.",
+        "category": "Ten Commandments"
+      },
+      {
+        "id": 89,
+        "question": "Why is it called the Lord's day?",
+        "answer": "Because on that day Christ rose from the dead.",
+        "category": "Ten Commandments"
+      },
+      {
+        "id": 90,
+        "question": "How should the Sabbath be spent?",
+        "answer": "In prayer and praise, in hearing and reading God's Word, and in doing good to our fellow men.",
+        "category": "Ten Commandments"
+      },
+      {
+        "id": 91,
+        "question": "What is the fifth commandment?",
+        "answer": "The fifth commandment is, Honor thy father and thy mother, that thy days may be long upon the land which the Lord thy God giveth thee.",
+        "category": "Ten Commandments"
+      },
+      {
+        "id": 92,
+        "question": "What does the fifth commandment teach me?",
+        "answer": "To love and obey our parents and teachers.",
+        "category": "Ten Commandments"
+      },
+      {
+        "id": 93,
+        "question": "What is the sixth commandment?",
+        "answer": "The sixth commandment is, Thou shalt not kill.",
+        "category": "Ten Commandments"
+      },
+      {
+        "id": 94,
+        "question": "What does the sixth commandment teach us?",
+        "answer": "To avoid angry passions.",
+        "category": "Ten Commandments"
+      },
+      {
+        "id": 95,
+        "question": "What is the seventh commandment?",
+        "answer": "The seventh commandment is, Thou shalt not commit adultery.",
+        "category": "Ten Commandments"
+      },
+      {
+        "id": 96,
+        "question": "What does the seventh commandment teach us?",
+        "answer": "To be pure in heart, language, and conduct.",
+        "category": "Ten Commandments"
+      },
+      {
+        "id": 97,
+        "question": "What is the eighth commandment?",
+        "answer": "The eighth commandment is, Thou shalt not steal.",
+        "category": "Ten Commandments"
+      },
+      {
+        "id": 98,
+        "question": "What does the eighth commandment teach us?",
+        "answer": "To be honest and industrious.",
+        "category": "Ten Commandments"
+      },
+      {
+        "id": 99,
+        "question": "What is the ninth commandment?",
+        "answer": "The ninth commandment is, Thou shalt not bear false witness against thy neighbor.",
+        "category": "Ten Commandments"
+      },
+      {
+        "id": 100,
+        "question": "What does the ninth commandment teach us?",
+        "answer": "To tell the truth.",
+        "category": "Ten Commandments"
+      },
+      {
+        "id": 101,
+        "question": "What is the tenth commandment?",
+        "answer": "The tenth commandment is, Thou shalt not covet thy neighbor's house, thou shalt not covet thy neighbor's wife, nor his manservant, nor his maidservant, nor his ox, nor his ass, nor any thing that is thy neighbor's.",
+        "category": "Ten Commandments"
+      },
+      {
+        "id": 102,
+        "question": "What does the tenth commandment teach us?",
+        "answer": "To be content with our lot.",
+        "category": "Ten Commandments"
+      },
+      {
+        "id": 103,
+        "question": "Can any man keep these ten commandments perfectly?",
+        "answer": "No mere man, since the fall of Adam, ever did or can keep the ten commandments perfectly.",
+        "category": "Ten Commandments"
+      },
+      {
+        "id": 104,
+        "question": "Of what use are the ten commandments to us?",
+        "answer": "They teach us our duty, and show our need of a Savior.",
+        "category": "Ten Commandments"
+      },
+      {
+        "id": 105,
+        "question": "What is prayer?",
+        "answer": "Prayer is asking God for things which he has promised to give.",
+        "category": "Prayer"
+      },
+      {
+        "id": 106,
+        "question": "In whose name should we pray?",
+        "answer": "Only in the name of Christ.",
+        "category": "Prayer"
+      },
+      {
+        "id": 107,
+        "question": "What has Christ given us to teach us how to pray?",
+        "answer": "The Lord's Prayer.",
+        "category": "Prayer"
+      },
+      {
+        "id": 108,
+        "question": "Repeat the Lord's Prayer.",
+        "answer": "Our Father which art in heaven, Hallowed be thy name. Thy kingdom come. Thy will be done in earth, as it is in heaven. Give us this day our daily bread. And forgive us our debts, as we forgive our debtors. And lead us not into temptation, but deliver us from evil: For thine is the kingdom, and the power, and the glory, for ever. Amen.",
+        "category": "Prayer"
+      },
+      {
+        "id": 109,
+        "question": "How many petitions are there in The Lord's Prayer?",
+        "answer": "Six.",
+        "category": "Prayer"
+      },
+      {
+        "id": 110,
+        "question": "What is the first petition?",
+        "answer": "\"Hallowed be thy name.\"",
+        "category": "Prayer"
+      },
+      {
+        "id": 111,
+        "question": "What do we pray for in the first petition?",
+        "answer": "That God's name may be honored by us and all men.",
+        "category": "Prayer"
+      },
+      {
+        "id": 112,
+        "question": "What is the second petition?",
+        "answer": "\"Thy kingdom come.\"",
+        "category": "Prayer"
+      },
+      {
+        "id": 113,
+        "question": "What do we pray for in the second petition?",
+        "answer": "That the gospel may be preached in all the world, and believed and obeyed by us and all men.",
+        "category": "Prayer"
+      },
+      {
+        "id": 114,
+        "question": "What is the third petition?",
+        "answer": "\"Thy will be done in earth, as it is in heaven.\"",
+        "category": "Prayer"
+      },
+      {
+        "id": 115,
+        "question": "What do we pray for in the third petition?",
+        "answer": "That men on earth may serve God as the angels do in heaven.",
+        "category": "Prayer"
+      },
+      {
+        "id": 116,
+        "question": "What is the fourth petition?",
+        "answer": "\"Give us this day our daily bread.\"",
+        "category": "Prayer"
+      },
+      {
+        "id": 117,
+        "question": "What do we pray for in the fourth petition?",
+        "answer": "That God would give us all things needful for our bodies and souls.",
+        "category": "Prayer"
+      },
+      {
+        "id": 118,
+        "question": "What is the fifth petition?",
+        "answer": "\"And forgive us our debts, as we forgive our debtors.\"",
+        "category": "Prayer"
+      },
+      {
+        "id": 119,
+        "question": "What do we pray for in the fifth petition?",
+        "answer": "That God would pardon our sins for Christ's sake, and enable us to forgive those who have injured us.",
+        "category": "Prayer"
+      },
+      {
+        "id": 120,
+        "question": "What is the sixth petition?",
+        "answer": "\"And lead us not into temptation, but deliver us from evil.\"",
+        "category": "Prayer"
+      },
+      {
+        "id": 121,
+        "question": "What do we pray for in the sixth petition?",
+        "answer": "That God would keep us from sin.",
+        "category": "Prayer"
+      },
+      {
+        "id": 122,
+        "question": "How many sacraments are there?",
+        "answer": "Two.",
+        "category": "Sacraments"
+      },
+      {
+        "id": 123,
+        "question": "What are they?",
+        "answer": "Baptism and the Lord's Supper.",
+        "category": "Sacraments"
+      },
+      {
+        "id": 124,
+        "question": "Who appointed these sacraments?",
+        "answer": "The Lord Jesus Christ.",
+        "category": "Sacraments"
+      },
+      {
+        "id": 125,
+        "question": "Why did Christ appoint these sacraments?",
+        "answer": "To distinguish his disciples from the world, and to comfort and strengthen them.",
+        "category": "Sacraments"
+      },
+      {
+        "id": 126,
+        "question": "What sign is used in baptism?",
+        "answer": "The washing with water.",
+        "category": "Sacraments"
+      },
+      {
+        "id": 127,
+        "question": "What does this signify?",
+        "answer": "That we are cleansed from sin by the blood of Christ.",
+        "category": "Sacraments"
+      },
+      {
+        "id": 128,
+        "question": "In whose name are we baptized?",
+        "answer": "In the name of the Father, and of the Son, and of the Holy Ghost.",
+        "category": "Sacraments"
+      },
+      {
+        "id": 129,
+        "question": "Who are to be baptized?",
+        "answer": "Believers and their children.",
+        "category": "Sacraments"
+      },
+      {
+        "id": 130,
+        "question": "Why should infants be baptized?",
+        "answer": "Because they have a sinful nature and need a Savior.",
+        "category": "Sacraments"
+      },
+      {
+        "id": 131,
+        "question": "Does Christ care for little children?",
+        "answer": "Yes; for he says, \"Suffer the little children to come unto me, and forbid them not: for of such is the kingdom of God.\"",
+        "category": "Sacraments"
+      },
+      {
+        "id": 132,
+        "question": "To what does your baptism bind you?",
+        "answer": "To be a true follower of Christ.",
+        "category": "Sacraments"
+      },
+      {
+        "id": 133,
+        "question": "What is the Lord's Supper?",
+        "answer": "The eating of bread and drinking of wine in remembrance of the sufferings and death of Christ.",
+        "category": "Sacraments"
+      },
+      {
+        "id": 134,
+        "question": "What does the bread represent?",
+        "answer": "The body of Christ, broken for our sins.",
+        "category": "Sacraments"
+      },
+      {
+        "id": 135,
+        "question": "What does the wine represent?",
+        "answer": "The blood of Christ, shed for our salvation.",
+        "category": "Sacraments"
+      },
+      {
+        "id": 136,
+        "question": "Who should partake of the Lord's Supper?",
+        "answer": "Only those who repent of their sins, believe in Christ for salvation, and love their fellow men.",
+        "category": "Sacraments"
+      },
+      {
+        "id": 137,
+        "question": "Did Christ remain in the tomb after his crucifixion?",
+        "answer": "No; he rose from the tomb on the third day after his death.",
+        "category": "Last Things"
+      },
+      {
+        "id": 138,
+        "question": "Where is Christ now?",
+        "answer": "In heaven, interceding for sinners.",
+        "category": "Last Things"
+      },
+      {
+        "id": 139,
+        "question": "Will he come again?",
+        "answer": "Yes; at the last day Christ will come to judge the world.",
+        "category": "Last Things"
+      },
+      {
+        "id": 140,
+        "question": "What becomes of men at death?",
+        "answer": "The body returns to dust, and the soul goes into the world of spirits.",
+        "category": "Last Things"
+      },
+      {
+        "id": 141,
+        "question": "Will the bodies of the dead be raised to life again?",
+        "answer": "Yes; \"The trumpet shall sound, and the dead shall be raised.\"",
+        "category": "Last Things"
+      },
+      {
+        "id": 142,
+        "question": "What will become of the wicked in the day of judgment?",
+        "answer": "They shall be cast into hell.",
+        "category": "Last Things"
+      },
+      {
+        "id": 143,
+        "question": "What is hell?",
+        "answer": "A place of dreadful and endless torment.",
+        "category": "Last Things"
+      },
+      {
+        "id": 144,
+        "question": "What will become of the righteous?",
+        "answer": "They shall be taken to heaven.",
+        "category": "Last Things"
+      },
+      {
+        "id": 145,
+        "question": "What is heaven?",
+        "answer": "A glorious and happy place, where the righteous shall be forever with the Lord.",
+        "category": "Last Things"
+      }
+    ]
+  }

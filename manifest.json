@@ -1,6 +1,6 @@
 {
     "name": "Children's Shorter Catechism",
-    "short_name": "ShorterCat",
+    "short_name": "Catechism",
     "start_url": "./index.html",
     "display": "standalone",
     "background_color": "#ffffff",
