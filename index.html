@@ -301,7 +301,7 @@
 
         .bookmark-dropdown {
             position: absolute;
-            top: 60px;
+            top: 120px;
             left: 50%;
             transform: translateX(-50%);
             width: 350px;
@@ -1102,20 +1102,9 @@
                 margin-left: 10px;
             }
 
-            /* Mobile-specific bookmark dropdown positioning */
             .bookmark-dropdown {
-                position: fixed;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
                 width: calc(100vw - 40px);
                 max-width: 350px;
-                max-height: 70vh;
-                z-index: 1001;
-            }
-
-            .bookmark-dropdown.active {
-                transform: translate(-50%, -50%);
             }
         }
     </style>
