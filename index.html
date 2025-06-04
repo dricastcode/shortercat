@@ -70,9 +70,38 @@
             line-height: 1.2;
         }
 
-        /* Search Section */
+        /* Search Section - Now Sticky */
         .search-section {
             margin-bottom: 30px;
+        }
+
+        .sticky-search {
+            position: sticky;
+            top: 0;
+            z-index: 998;
+            padding: 15px 0;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(128, 128, 128, 0.2);
+        }
+
+        .search-bookmark-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .search-container {
+            flex: 1;
+            position: relative;
+        }
+
+        .bookmark-section {
+            position: relative;
+            flex-shrink: 0;
         }
 
         .hamburger {
@@ -156,9 +185,7 @@
         }
 
         .search-container {
-            width: 100%;
-            max-width: 500px;
-            margin: 0 auto;
+            flex: 1;
             position: relative;
         }
 
@@ -220,9 +247,7 @@
         /* Bookmark Section */
         .bookmark-section {
             position: relative;
-            display: flex;
-            justify-content: center;
-            margin-top: 20px;
+            flex-shrink: 0;
         }
 
         .bookmark-main-btn {
@@ -361,6 +386,45 @@
 
         .bookmark-remove:hover {
             opacity: 1;
+        }
+
+        /* Scroll to Top Button */
+        .scroll-to-top {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            width: 50px;
+            height: 50px;
+            border: 2px solid;
+            border-radius: 50%;
+            background: transparent;
+            backdrop-filter: blur(10px);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .scroll-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .scroll-to-top:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .chevron-up {
+            width: 24px;
+            height: 24px;
+            transition: all 0.3s ease;
         }
 
         /* Individual Card Bookmark Buttons */
@@ -708,6 +772,20 @@
             color: #333333;
         }
 
+        body.light .sticky-search {
+            background: rgba(245, 245, 245, 0.95);
+        }
+
+        body.light .scroll-to-top {
+            border-color: #333333;
+            color: #333333;
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        body.light .chevron-up {
+            fill: #333333;
+        }
+
         body.light .retry-btn {
             border-color: #333333;
             color: #333333;
@@ -778,6 +856,20 @@
         body.dark .bookmark-dropdown {
             background: #2d2d2d;
             color: #e0e0e0;
+        }
+
+        body.dark .sticky-search {
+            background: rgba(26, 26, 26, 0.95);
+        }
+
+        body.dark .scroll-to-top {
+            border-color: #e0e0e0;
+            color: #e0e0e0;
+            background: rgba(45, 45, 45, 0.9);
+        }
+
+        body.dark .chevron-up {
+            fill: #e0e0e0;
         }
 
         body.dark .retry-btn {
@@ -852,6 +944,20 @@
             color: #e1f5fe;
         }
 
+        body.blue .sticky-search {
+            background: rgba(30, 58, 95, 0.95);
+        }
+
+        body.blue .scroll-to-top {
+            border-color: #64b5f6;
+            color: #e1f5fe;
+            background: rgba(44, 82, 130, 0.9);
+        }
+
+        body.blue .chevron-up {
+            fill: #64b5f6;
+        }
+
         body.blue .retry-btn {
             border-color: #64b5f6;
             color: #e1f5fe;
@@ -924,6 +1030,20 @@
             color: #5d4e37;
         }
 
+        body.sepia .sticky-search {
+            background: rgba(244, 241, 232, 0.95);
+        }
+
+        body.sepia .scroll-to-top {
+            border-color: #8b7765;
+            color: #5d4e37;
+            background: rgba(250, 246, 237, 0.9);
+        }
+
+        body.sepia .chevron-up {
+            fill: #8b7765;
+        }
+
         body.sepia .retry-btn {
             border-color: #8b7765;
             color: #5d4e37;
@@ -947,6 +1067,28 @@
                 font-size: 1.6rem;
             }
 
+            .search-bookmark-container {
+                gap: 10px;
+                max-width: 100%;
+            }
+
+            .bookmark-main-btn {
+                width: 45px;
+                height: 45px;
+            }
+
+            .scroll-to-top {
+                bottom: 15px;
+                left: 15px;
+                width: 45px;
+                height: 45px;
+            }
+
+            .chevron-up {
+                width: 20px;
+                height: 20px;
+            }
+
             .theme-buttons {
                 gap: 15px;
             }
@@ -960,8 +1102,20 @@
                 margin-left: 10px;
             }
 
-            .search-container {
-                max-width: 100%;
+            /* Mobile-specific bookmark dropdown positioning */
+            .bookmark-dropdown {
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: calc(100vw - 40px);
+                max-width: 350px;
+                max-height: 70vh;
+                z-index: 1001;
+            }
+
+            .bookmark-dropdown.active {
+                transform: translate(-50%, -50%);
             }
         }
     </style>
@@ -980,36 +1134,40 @@
         </nav>
 
         <!-- Search Section -->
-        <div class="search-section">
-            <div class="search-container">
-                <input type="text" class="search-box" placeholder="Search questions and answers..." id="searchInput">
-                <button class="clear-search" id="clearSearch">×</button>
-                <svg class="search-icon" viewBox="0 0 24 24">
-                    <path
-                        d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
-                </svg>
-            </div>
-
-            <!-- Bookmark Button -->
-            <div class="bookmark-section">
-                <button class="bookmark-main-btn" id="bookmarkMainBtn" title="View Bookmarks">
-                    <svg class="bookmark-ribbon" viewBox="0 0 24 24">
-                        <path d="M17,3H7A2,2 0 0,0 5,5V21L12,18L19,21V5C19,4.89 18.89,4 17,3Z" />
+        <div class="search-section sticky-search">
+            <div class="search-bookmark-container">
+                <div class="search-container">
+                    <input type="text" class="search-box" placeholder="Search questions..." id="searchInput">
+                    <button class="clear-search" id="clearSearch">×</button>
+                    <svg class="search-icon" viewBox="0 0 24 24">
+                        <path
+                            d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
                     </svg>
-                    <span class="bookmark-count" id="bookmarkCount">0</span>
-                </button>
+                </div>
 
-                <!-- Bookmark Dropdown -->
-                <div class="bookmark-dropdown" id="bookmarkDropdown">
-                    <div class="bookmark-dropdown-header">
-                        <h3>Bookmarked Questions</h3>
-                    </div>
-                    <div class="bookmark-list" id="bookmarkList">
-                        <div class="no-bookmarks">No bookmarks yet. Click the bookmark icon on any question to save it!
+                <!-- Bookmark Button -->
+                <div class="bookmark-section">
+                    <button class="bookmark-main-btn" id="bookmarkMainBtn" title="View Bookmarks">
+                        <svg class="bookmark-ribbon" viewBox="0 0 24 24">
+                            <path d="M17,3H7A2,2 0 0,0 5,5V21L12,18L19,21V5C19,4.89 18.89,4 17,3Z" />
+                        </svg>
+                        <span class="bookmark-count" id="bookmarkCount">0</span>
+                    </button>
+
+                    <!-- Bookmark Dropdown -->
+                    <div class="bookmark-dropdown" id="bookmarkDropdown">
+                        <div class="bookmark-dropdown-header">
+                            <h3>Bookmarked Questions</h3>
+                        </div>
+                        <div class="bookmark-list" id="bookmarkList">
+                            <div class="no-bookmarks">No bookmarks yet. Click the bookmark icon on any question to save
+                                it!</div>
                         </div>
                     </div>
                 </div>
             </div>
+
+            <div class="search-results" id="searchResults"></div>
         </div>
 
         <div class="search-results" id="searchResults"></div>
@@ -1042,6 +1200,13 @@
                 <!-- Questions will be loaded here dynamically -->
             </div>
         </div>
+
+        <!-- Scroll to Top Button -->
+        <button class="scroll-to-top" id="scrollToTop" title="Back to top">
+            <svg class="chevron-up" viewBox="0 0 24 24">
+                <path d="M7.41,15.41L12,10.83L16.59,15.41L18,14L12,8L6,14L7.41,15.41Z" />
+            </svg>
+        </button>
     </div>
 
     <script>
@@ -1240,6 +1405,35 @@
             dropdown.classList.toggle('active');
         }
 
+        // Scroll to Top Functionality
+        function updateScrollToTop() {
+            const scrollToTopBtn = document.getElementById('scrollToTop');
+            const questionsContainer = document.getElementById('questionsContainer');
+            const questions = questionsContainer.querySelectorAll('.qa-item');
+
+            if (questions.length >= 15) {
+                // Calculate approximate position of 15th question
+                const fifteenthQuestion = questions[14]; // 0-indexed
+                const questionRect = fifteenthQuestion.getBoundingClientRect();
+                const windowTop = window.pageYOffset || document.documentElement.scrollTop;
+                const questionTop = questionRect.top + windowTop;
+
+                // Show button when scrolled past 15th question
+                if (window.scrollY > questionTop - window.innerHeight) {
+                    scrollToTopBtn.classList.add('visible');
+                } else {
+                    scrollToTopBtn.classList.remove('visible');
+                }
+            }
+        }
+
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
         function setTheme(theme) {
             // Remove current theme class
             document.body.className = theme;
@@ -1407,6 +1601,10 @@
 
             // Bookmark functionality
             document.getElementById('bookmarkMainBtn').addEventListener('click', toggleBookmarkDropdown);
+
+            // Scroll to top functionality
+            document.getElementById('scrollToTop').addEventListener('click', scrollToTop);
+            window.addEventListener('scroll', updateScrollToTop);
 
             // Close bookmark dropdown when clicking outside
             document.addEventListener('click', function (e) {
