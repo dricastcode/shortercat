@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 
 <head>
@@ -6,1108 +7,1071 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Children's Catechism</title>
 
-    <!-- iOS Fullscreen Web App -->
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="ShorterCat">
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-    <link rel="manifest" href="manifest.json">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+```
+<!-- iOS Fullscreen Web App -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ShorterCat">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="manifest.json">
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
 
+    body {
+        font-family: 'Georgia', 'Times New Roman', serif;
+        line-height: 1.6;
+        transition: all 0.3s ease;
+        padding: 0;
+        margin: 0;
+        min-height: 100vh;
+    }
+
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+        background: inherit;
+        border-radius: 0;
+        padding: 20px;
+        min-height: 100vh;
+        box-shadow: none;
+        transition: all 0.3s ease;
+    }
+
+    /* Desktop styling - add back some spacing and styling for larger screens */
+    @media (min-width: 768px) {
         body {
-            font-family: 'Georgia', 'Times New Roman', serif;
-            line-height: 1.6;
-            transition: all 0.3s ease;
-            padding: 0;
-            margin: 0;
-            min-height: 100vh;
+            padding: 20px;
+            background: var(--desktop-bg, #f0f0f0);
+        }
+        
+        .container {
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            min-height: auto;
+        }
+    }
+
+    /* Navigation Bar */
+    .nav-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+        padding-bottom: 15px;
+        border-bottom: 2px solid;
+    }
+
+    .nav-title {
+        margin: 0;
+        font-size: 2rem;
+        font-weight: bold;
+        line-height: 1.2;
+    }
+
+    /* Search Section - Now Sticky */
+    .search-section {
+        margin-bottom: 30px;
+    }
+
+    .sticky-search {
+        position: sticky;
+        top: 0;
+        z-index: 998;
+        padding: 15px 0;
+        margin-bottom: 20px;
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid rgba(128, 128, 128, 0.2);
+    }
+
+    .search-bookmark-container {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        width: 100%;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .search-container {
+        flex: 1;
+        position: relative;
+    }
+
+    .bookmark-section {
+        position: relative;
+        flex-shrink: 0;
+    }
+
+    .hamburger {
+        cursor: pointer;
+        padding: 10px;
+        border-radius: 5px;
+        transition: all 0.3s ease;
+        position: relative;
+        z-index: 1001;
+    }
+
+    .hamburger:hover {
+        background: rgba(128, 128, 128, 0.2);
+    }
+
+    .hamburger-lines {
+        width: 25px;
+        height: 3px;
+        margin: 5px 0;
+        transition: 0.3s;
+        transform-origin: center;
+    }
+
+    .hamburger.active .hamburger-lines:nth-child(1) {
+        transform: rotate(45deg) translate(6px, 6px);
+    }
+
+    .hamburger.active .hamburger-lines:nth-child(2) {
+        opacity: 0;
+    }
+
+    .hamburger.active .hamburger-lines:nth-child(3) {
+        transform: rotate(-45deg) translate(6px, -6px);
+    }
+
+    .menu-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+    }
+
+    .menu-overlay.active {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .theme-menu {
+        position: fixed;
+        top: 0;
+        right: -300px;
+        width: 300px;
+        height: 100%;
+        padding: 80px 30px 30px;
+        z-index: 1000;
+        transition: all 0.3s ease;
+    }
+
+    .theme-menu.active {
+        right: 0;
+    }
+
+    .theme-menu h2 {
+        margin-bottom: 25px;
+        font-size: 1.4em;
+        text-align: center;
+    }
+
+    .theme-buttons {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .search-container {
+        flex: 1;
+        position: relative;
+    }
+
+    .search-box {
+        width: 100%;
+        padding: 12px 45px 12px 15px;
+        border: 2px solid;
+        border-radius: 25px;
+        font-size: 1em;
+        font-family: inherit;
+        background: transparent;
+        transition: all 0.3s ease;
+    }
+
+    .search-box:focus {
+        outline: none;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .search-icon {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 20px;
+        height: 20px;
+        opacity: 0.6;
+    }
+
+    .clear-search {
+        position: absolute;
+        right: 40px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        font-size: 1.2em;
+        cursor: pointer;
+        opacity: 0.6;
+        transition: opacity 0.3s ease;
+        display: none;
+    }
+
+    .clear-search:hover {
+        opacity: 1;
+    }
+
+    .clear-search.visible {
+        display: block;
+    }
+
+    .search-results {
+        margin-top: 20px;
+        font-size: 0.9em;
+        text-align: center;
+        opacity: 0.8;
+    }
+
+    /* Bookmark Section */
+    .bookmark-section {
+        position: relative;
+        flex-shrink: 0;
+    }
+
+    .bookmark-main-btn {
+        position: relative;
+        width: 50px;
+        height: 50px;
+        border: 2px solid;
+        border-radius: 50%;
+        background: transparent;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .bookmark-main-btn:hover {
+        transform: scale(1.1);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .bookmark-ribbon {
+        width: 24px;
+        height: 24px;
+        transition: all 0.3s ease;
+    }
+
+    .bookmark-count {
+        position: absolute;
+        top: -8px;
+        right: -8px;
+        background: #ff4757;
+        color: white;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        font-weight: bold;
+        opacity: 0;
+        transform: scale(0);
+        transition: all 0.3s ease;
+    }
+
+    .bookmark-count.visible {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    .bookmark-dropdown {
+        position: absolute;
+        top: 60px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 350px;
+        max-height: 400px;
+        border-radius: 12px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        z-index: 1000;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateX(-50%) translateY(-10px);
+        transition: all 0.3s ease;
+        overflow: hidden;
+    }
+
+    .bookmark-dropdown.active {
+        opacity: 1;
+        visibility: visible;
+        transform: translateX(-50%) translateY(0);
+    }
+
+    .bookmark-dropdown-header {
+        padding: 15px 20px;
+        border-bottom: 1px solid rgba(128, 128, 128, 0.2);
+    }
+
+    .bookmark-dropdown-header h3 {
+        margin: 0;
+        font-size: 1.1em;
+        font-weight: bold;
+    }
+
+    .bookmark-list {
+        max-height: 300px;
+        overflow-y: auto;
+        padding: 10px 0;
+    }
+
+    .no-bookmarks {
+        padding: 30px 20px;
+        text-align: center;
+        opacity: 0.6;
+        font-style: italic;
+    }
+
+    .bookmark-item {
+        display: flex;
+        align-items: center;
+        padding: 12px 20px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        border-left: 4px solid;
+    }
+
+    .bookmark-item:hover {
+        background: rgba(128, 128, 128, 0.1);
+    }
+
+    .bookmark-ribbon-small {
+        width: 16px;
+        height: 16px;
+        margin-right: 12px;
+        flex-shrink: 0;
+    }
+
+    .bookmark-item-text {
+        flex: 1;
+        font-size: 0.9em;
+        line-height: 1.3;
+    }
+
+    .bookmark-remove {
+        width: 20px;
+        height: 20px;
+        border: none;
+        background: none;
+        cursor: pointer;
+        opacity: 0.5;
+        transition: opacity 0.2s ease;
+        font-size: 16px;
+        margin-left: 8px;
+    }
+
+    .bookmark-remove:hover {
+        opacity: 1;
+    }
+
+    /* Scroll to Top Button */
+    .scroll-to-top {
+        position: fixed;
+        bottom: 20px;
+        left: 20px;
+        width: 50px;
+        height: 50px;
+        border: 2px solid;
+        border-radius: 50%;
+        background: transparent;
+        backdrop-filter: blur(10px);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        z-index: 1000;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(20px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .scroll-to-top.visible {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+    }
+
+    .scroll-to-top:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .chevron-up {
+        width: 24px;
+        height: 24px;
+        transition: all 0.3s ease;
+    }
+
+    /* Individual Card Bookmark Buttons */
+    .qa-item {
+        position: relative;
+        margin-bottom: 15px; /* Reduced from 25px */
+        padding: 25px; /* Increased from 20px */
+        border-radius: 8px;
+        border-left: 4px solid;
+        transition: all 0.3s ease;
+    }
+
+    .qa-bookmark-btn {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        width: 28px;
+        height: 28px;
+        border: none;
+        background: none;
+        cursor: pointer;
+        opacity: 0.6;
+        transition: all 0.3s ease;
+    }
+
+    .qa-bookmark-btn:hover {
+        opacity: 1;
+        transform: scale(1.1);
+    }
+
+    .qa-bookmark-btn.bookmarked {
+        opacity: 1;
+    }
+
+    .qa-bookmark-icon {
+        width: 20px;
+        height: 20px;
+        transition: all 0.3s ease;
+    }
+
+    /* Ribbon Colors */
+    .ribbon-color-1 { fill: #ff9ff3; border-left-color: #ff9ff3; }
+    .ribbon-color-2 { fill: #54a0ff; border-left-color: #54a0ff; }
+    .ribbon-color-3 { fill: #5f27cd; border-left-color: #5f27cd; }
+    .ribbon-color-4 { fill: #00d2d3; border-left-color: #00d2d3; }
+    .ribbon-color-5 { fill: #ff9f43; border-left-color: #ff9f43; }
+    .ribbon-color-6 { fill: #10ac84; border-left-color: #10ac84; }
+    .ribbon-color-7 { fill: #ee5a6f; border-left-color: #ee5a6f; }
+    .ribbon-color-8 { fill: #c44569; border-left-color: #c44569; }
+    .ribbon-color-9 { fill: #786fa6; border-left-color: #786fa6; }
+    .ribbon-color-10 { fill: #f8b500; border-left-color: #f8b500; }
+
+    /* Loading and Error States */
+    .loading-state, .error-state {
+        text-align: center;
+        padding: 40px 20px;
+    }
+
+    .loading-text {
+        font-size: 1.1em;
+        opacity: 0.7;
+        animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+        0%, 100% { opacity: 0.7; }
+        50% { opacity: 1; }
+    }
+
+    .error-text h3 {
+        margin-bottom: 10px;
+        font-size: 1.2em;
+    }
+
+    .error-text p {
+        margin-bottom: 20px;
+        opacity: 0.8;
+    }
+
+    .retry-btn {
+        padding: 10px 20px;
+        border: 2px solid;
+        border-radius: 5px;
+        background: transparent;
+        cursor: pointer;
+        font-family: inherit;
+        transition: all 0.3s ease;
+    }
+
+    .retry-btn:hover {
+        background: rgba(128, 128, 128, 0.1);
+    }
+
+    /* Updated Circular Theme Button Styles */
+    .theme-btn {
+        width: 50px;
+        height: 50px;
+        border: 3px solid transparent;
+        border-radius: 50%;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        background: none;
+        padding: 0;
+    }
+
+    .theme-btn:hover {
+        transform: scale(1.15);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+    }
+
+    .theme-btn.active {
+        border-color: currentColor;
+        transform: scale(1.1);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Individual theme button colors */
+    .theme-btn.light-btn {
+        background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 50%, #e9ecef 100%);
+        border-color: #6c757d;
+    }
+
+    .theme-btn.light-btn.active {
+        border-color: #333333;
+    }
+
+    .theme-btn.dark-btn {
+        background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #3a3a3a 100%);
+        border-color: #6c757d;
+    }
+
+    .theme-btn.dark-btn.active {
+        border-color: #e0e0e0;
+    }
+
+    .theme-btn.blue-btn {
+        background: linear-gradient(135deg, #0f1419 0%, #1e3a5f 50%, #64b5f6 100%);
+        border-color: #6c757d;
+    }
+
+    .theme-btn.blue-btn.active {
+        border-color: #64b5f6;
+    }
+
+    .theme-btn.sepia-btn {
+        background: linear-gradient(135deg, #f4f1e8 0%, #8b7765 50%, #5d4e37 100%);
+        border-color: #6c757d;
+    }
+
+    .theme-btn.sepia-btn.active {
+        border-color: #8b7765;
+    }
+
+    /* Checkmark for active state */
+    .theme-btn::after {
+        content: '✓';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: white;
+        font-size: 16px;
+        font-weight: bold;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+    }
+
+    .theme-btn.active::after {
+        opacity: 1;
+    }
+
+    .theme-btn.light-btn::after {
+        color: #333333;
+        text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
+    }
+
+    /* Tooltip for theme buttons */
+    .theme-btn {
+        position: relative;
+    }
+
+    .theme-btn[data-theme]::before {
+        content: attr(data-theme);
+        position: absolute;
+        bottom: -35px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(0, 0, 0, 0.8);
+        color: white;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 12px;
+        white-space: nowrap;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+        z-index: 1002;
+    }
+
+    .theme-btn:hover::before {
+        opacity: 1;
+    }
+
+    .catechism {
+        margin-top: 30px;
+    }
+
+    .qa-item {
+        margin-bottom: 25px;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid;
+        transition: all 0.3s ease;
+    }
+
+    .qa-item:hover {
+        transform: translateX(5px);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .question {
+        font-weight: bold;
+        margin-bottom: 8px;
+        font-size: 1.05em;
+    }
+
+    .answer {
+        margin-left: 20px;
+        font-size: 1em;
+    }
+
+    /* Theme Styles */
+
+    /* Default Theme - Light */
+    body.light {
+        background: #f5f5f5;
+        color: #333333;
+        --desktop-bg: #f0f0f0;
+    }
+
+    body.light .container {
+        background: #f5f5f5;
+    }
+
+    @media (min-width: 768px) {
+        body.light .container {
+            background: #fafafa;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+    }
+
+    body.light .nav-bar {
+        border-bottom-color: #333333;
+    }
+
+    body.light .hamburger-lines {
+        background: #333333;
+    }
+
+    body.light .theme-menu {
+        background: #ffffff;
+        box-shadow: -4px 0 12px rgba(0, 0, 0, 0.1);
+    }
+
+    body.light .search-box {
+        border-color: #333333;
+        color: #333333;
+    }
+
+    body.light .search-box::placeholder {
+        color: #666666;
+    }
+
+    body.light .search-icon {
+        fill: #333333;
+    }
+
+    body.light .clear-search {
+        color: #333333;
+    }
+
+    body.light .bookmark-main-btn {
+        border-color: #333333;
+        color: #333333;
+    }
+
+    body.light .bookmark-ribbon {
+        fill: #333333;
+    }
+
+    body.light .bookmark-dropdown {
+        background: #ffffff;
+        color: #333333;
+    }
+
+    body.light .sticky-search {
+        background: rgba(245, 245, 245, 0.95);
+    }
+
+    body.light .scroll-to-top {
+        border-color: #333333;
+        color: #333333;
+        background: rgba(255, 255, 255, 0.9);
+    }
+
+    body.light .chevron-up {
+        fill: #333333;
+    }
+
+    body.light .retry-btn {
+        border-color: #333333;
+        color: #333333;
+    }
+
+    body.light .qa-item {
+        background: #ffffff;
+        border-left-color: #4a90e2;
+    }
+
+    /* Dark Theme */
+    body.dark {
+        background: #1a1a1a;
+        color: #e0e0e0;
+        --desktop-bg: #0f0f0f;
+    }
+
+    body.dark .container {
+        background: #1a1a1a;
+    }
+
+    @media (min-width: 768px) {
+        body.dark .container {
+            background: #2d2d2d;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+    }
+
+    body.dark .nav-bar {
+        border-bottom-color: #e0e0e0;
+    }
+
+    body.dark .hamburger-lines {
+        background: #e0e0e0;
+    }
+
+    body.dark .theme-menu {
+        background: #2d2d2d;
+        box-shadow: -4px 0 12px rgba(0, 0, 0, 0.3);
+    }
+
+    body.dark .search-box {
+        border-color: #e0e0e0;
+        color: #e0e0e0;
+    }
+
+    body.dark .search-box::placeholder {
+        color: #a0a0a0;
+    }
+
+    body.dark .search-icon {
+        fill: #e0e0e0;
+    }
+
+    body.dark .clear-search {
+        color: #e0e0e0;
+    }
+
+    body.dark .bookmark-main-btn {
+        border-color: #e0e0e0;
+        color: #e0e0e0;
+    }
+
+    body.dark .bookmark-ribbon {
+        fill: #e0e0e0;
+    }
+
+    body.dark .bookmark-dropdown {
+        background: #2d2d2d;
+        color: #e0e0e0;
+    }
+
+    body.dark .sticky-search {
+        background: rgba(26, 26, 26, 0.95);
+    }
+
+    body.dark .scroll-to-top {
+        border-color: #e0e0e0;
+        color: #e0e0e0;
+        background: rgba(45, 45, 45, 0.9);
+    }
+
+    body.dark .chevron-up {
+        fill: #e0e0e0;
+    }
+
+    body.dark .retry-btn {
+        border-color: #e0e0e0;
+        color: #e0e0e0;
+    }
+
+    body.dark .qa-item {
+        background: #3a3a3a;
+        border-left-color: #64b5f6;
+    }
+
+    /* Blue Theme */
+    body.blue {
+        background: #1e3a5f;
+        color: #e1f5fe;
+        --desktop-bg: #1a334d;
+    }
+
+    body.blue .container {
+        background: #1e3a5f;
+    }
+
+    @media (min-width: 768px) {
+        body.blue .container {
+            background: #2c5282;
+            box-shadow: 0 4px 12px rgba(30, 58, 95, 0.3);
+        }
+    }
+
+    body.blue .nav-bar {
+        border-bottom-color: #64b5f6;
+    }
+
+    body.blue .hamburger-lines {
+        background: #64b5f6;
+    }
+
+    body.blue .theme-menu {
+        background: #1e3a5f;
+        box-shadow: -4px 0 12px rgba(30, 58, 95, 0.3);
+    }
+
+    body.blue .search-box {
+        border-color: #64b5f6;
+        color: #e1f5fe;
+    }
+
+    body.blue .search-box::placeholder {
+        color: #90caf9;
+    }
+
+    body.blue .search-icon {
+        fill: #64b5f6;
+    }
+
+    body.blue .clear-search {
+        color: #64b5f6;
+    }
+
+    body.blue .bookmark-main-btn {
+        border-color: #64b5f6;
+        color: #e1f5fe;
+    }
+
+    body.blue .bookmark-ribbon {
+        fill: #64b5f6;
+    }
+
+    body.blue .bookmark-dropdown {
+        background: #1e3a5f;
+        color: #e1f5fe;
+    }
+
+    body.blue .sticky-search {
+        background: rgba(30, 58, 95, 0.95);
+    }
+
+    body.blue .scroll-to-top {
+        border-color: #64b5f6;
+        color: #e1f5fe;
+        background: rgba(44, 82, 130, 0.9);
+    }
+
+    body.blue .chevron-up {
+        fill: #64b5f6;
+    }
+
+    body.blue .retry-btn {
+        border-color: #64b5f6;
+        color: #e1f5fe;
+    }
+
+    body.blue .qa-item {
+        background: #2c5282;
+        border-left-color: #90caf9;
+    }
+
+    /* Sepia Theme */
+    body.sepia {
+        background: #f4f1e8;
+        color: #5d4e37;
+        --desktop-bg: #ebe7da;
+    }
+
+    body.sepia .container {
+        background: #f4f1e8;
+    }
+
+    @media (min-width: 768px) {
+        body.sepia .container {
+            background: #faf6ed;
+            box-shadow: 0 4px 12px rgba(139, 119, 101, 0.2);
+        }
+    }
+
+    body.sepia .nav-bar {
+        border-bottom-color: #8b7765;
+    }
+
+    body.sepia .hamburger-lines {
+        background: #8b7765;
+    }
+
+    body.sepia .theme-menu {
+        background: #faf6ed;
+        box-shadow: -4px 0 12px rgba(139, 119, 101, 0.2);
+    }
+
+    body.sepia .search-box {
+        border-color: #8b7765;
+        color: #5d4e37;
+    }
+
+    body.sepia .search-box::placeholder {
+        color: #8b7765;
+    }
+
+    body.sepia .search-icon {
+        fill: #8b7765;
+    }
+
+    body.sepia .clear-search {
+        color: #8b7765;
+    }
+
+    body.sepia .bookmark-main-btn {
+        border-color: #8b7765;
+        color: #5d4e37;
+    }
+
+    body.sepia .bookmark-ribbon {
+        fill: #8b7765;
+    }
+
+    body.sepia .bookmark-dropdown {
+        background: #faf6ed;
+        color: #5d4e37;
+    }
+
+    body.sepia .sticky-search {
+        background: rgba(244, 241, 232, 0.95);
+    }
+
+    body.sepia .scroll-to-top {
+        border-color: #8b7765;
+        color: #5d4e37;
+        background: rgba(250, 246, 237, 0.9);
+    }
+
+    body.sepia .chevron-up {
+        fill: #8b7765;
+    }
+
+    body.sepia .retry-btn {
+        border-color: #8b7765;
+        color: #5d4e37;
+    }
+
+    body.sepia .qa-item {
+        background: #f0ead6;
+        border-left-color: #cd853f;
+    }
+
+    @media (max-width: 600px) {
+        body {
+            padding: 10px;
         }
 
         .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: inherit;
-            border-radius: 0;
             padding: 20px;
-            min-height: 100vh;
-            box-shadow: none;
-            transition: all 0.3s ease;
-        }
-
-        /* Desktop styling - add back some spacing and styling for larger screens */
-        @media (min-width: 768px) {
-            body {
-                padding: 20px;
-                background: var(--desktop-bg, #f0f0f0);
-            }
-
-            .container {
-                border-radius: 10px;
-                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-                min-height: auto;
-            }
-        }
-
-        /* Navigation Bar */
-        .nav-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid;
         }
 
         .nav-title {
-            margin: 0;
-            font-size: 2rem;
-            font-weight: bold;
-            line-height: 1.2;
-        }
-
-        /* Search Section - Now Sticky */
-        .search-section {
-            margin-bottom: 30px;
-        }
-
-        .sticky-search {
-            position: sticky;
-            top: 0;
-            z-index: 998;
-            padding: 15px 0;
-            margin-bottom: 20px;
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(128, 128, 128, 0.2);
+            font-size: 1.6rem;
         }
 
         .search-bookmark-container {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            width: 100%;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .search-container {
-            flex: 1;
-            position: relative;
-        }
-
-        .bookmark-section {
-            position: relative;
-            flex-shrink: 0;
-        }
-
-        .hamburger {
-            cursor: pointer;
-            padding: 10px;
-            border-radius: 5px;
-            transition: all 0.3s ease;
-            position: relative;
-            z-index: 1001;
-        }
-
-        .hamburger:hover {
-            background: rgba(128, 128, 128, 0.2);
-        }
-
-        .hamburger-lines {
-            width: 25px;
-            height: 3px;
-            margin: 5px 0;
-            transition: 0.3s;
-            transform-origin: center;
-        }
-
-        .hamburger.active .hamburger-lines:nth-child(1) {
-            transform: rotate(45deg) translate(6px, 6px);
-        }
-
-        .hamburger.active .hamburger-lines:nth-child(2) {
-            opacity: 0;
-        }
-
-        .hamburger.active .hamburger-lines:nth-child(3) {
-            transform: rotate(-45deg) translate(6px, -6px);
-        }
-
-        .menu-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 999;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-        }
-
-        .menu-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .theme-menu {
-            position: fixed;
-            top: 0;
-            right: -300px;
-            width: 300px;
-            height: 100%;
-            padding: 80px 30px 30px;
-            z-index: 1000;
-            transition: all 0.3s ease;
-        }
-
-        .theme-menu.active {
-            right: 0;
-        }
-
-        .theme-menu h2 {
-            margin-bottom: 25px;
-            font-size: 1.4em;
-            text-align: center;
-        }
-
-        .theme-buttons {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .search-container {
-            flex: 1;
-            position: relative;
-        }
-
-        .search-box {
-            width: 100%;
-            padding: 12px 45px 12px 15px;
-            border: 2px solid;
-            border-radius: 25px;
-            font-size: 1em;
-            font-family: inherit;
-            background: transparent;
-            transition: all 0.3s ease;
-        }
-
-        .search-box:focus {
-            outline: none;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-        }
-
-        .search-icon {
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 20px;
-            height: 20px;
-            opacity: 0.6;
-        }
-
-        .clear-search {
-            position: absolute;
-            right: 40px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            font-size: 1.2em;
-            cursor: pointer;
-            opacity: 0.6;
-            transition: opacity 0.3s ease;
-            display: none;
-        }
-
-        .clear-search:hover {
-            opacity: 1;
-        }
-
-        .clear-search.visible {
-            display: block;
-        }
-
-        .search-results {
-            margin-top: 20px;
-            font-size: 0.9em;
-            text-align: center;
-            opacity: 0.8;
-        }
-
-        /* Bookmark Section */
-        .bookmark-section {
-            position: relative;
-            flex-shrink: 0;
+            gap: 10px;
+            max-width: 100%;
         }
 
         .bookmark-main-btn {
-            position: relative;
-            width: 50px;
-            height: 50px;
-            border: 2px solid;
-            border-radius: 50%;
-            background: transparent;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            width: 45px;
+            height: 45px;
         }
 
-        .bookmark-main-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-        }
-
-        .bookmark-ribbon {
-            width: 24px;
-            height: 24px;
-            transition: all 0.3s ease;
-        }
-
-        .bookmark-count {
-            position: absolute;
-            top: -8px;
-            right: -8px;
-            background: #ff4757;
-            color: white;
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-            font-weight: bold;
-            opacity: 0;
-            transform: scale(0);
-            transition: all 0.3s ease;
-        }
-
-        .bookmark-count.visible {
-            opacity: 1;
-            transform: scale(1);
-        }
-
-        .bookmark-dropdown {
-            position: absolute;
-            top: 120px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 350px;
-            max-height: 400px;
-            border-radius: 12px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-            z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
-            transform: translateX(-50%) translateY(-10px);
-            transition: all 0.3s ease;
-            overflow: hidden;
-        }
-
-        .bookmark-dropdown.active {
-            opacity: 1;
-            visibility: visible;
-            transform: translateX(-50%) translateY(0);
-        }
-
-        .bookmark-dropdown-header {
-            padding: 15px 20px;
-            border-bottom: 1px solid rgba(128, 128, 128, 0.2);
-        }
-
-        .bookmark-dropdown-header h3 {
-            margin: 0;
-            font-size: 1.1em;
-            font-weight: bold;
-        }
-
-        .bookmark-list {
-            max-height: 300px;
-            overflow-y: auto;
-            padding: 10px 0;
-        }
-
-        .no-bookmarks {
-            padding: 30px 20px;
-            text-align: center;
-            opacity: 0.6;
-            font-style: italic;
-        }
-
-        .bookmark-item {
-            display: flex;
-            align-items: center;
-            padding: 12px 20px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            border-left: 4px solid;
-        }
-
-        .bookmark-item:hover {
-            background: rgba(128, 128, 128, 0.1);
-        }
-
-        .bookmark-ribbon-small {
-            width: 16px;
-            height: 16px;
-            margin-right: 12px;
-            flex-shrink: 0;
-        }
-
-        .bookmark-item-text {
-            flex: 1;
-            font-size: 0.9em;
-            line-height: 1.3;
-        }
-
-        .bookmark-remove {
-            width: 20px;
-            height: 20px;
-            border: none;
-            background: none;
-            cursor: pointer;
-            opacity: 0.5;
-            transition: opacity 0.2s ease;
-            font-size: 16px;
-            margin-left: 8px;
-        }
-
-        .bookmark-remove:hover {
-            opacity: 1;
-        }
-
-        /* Scroll to Top Button */
         .scroll-to-top {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            width: 50px;
-            height: 50px;
-            border: 2px solid;
-            border-radius: 50%;
-            background: transparent;
-            backdrop-filter: blur(10px);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(20px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .scroll-to-top.visible {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-        }
-
-        .scroll-to-top:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            bottom: 15px;
+            left: 15px;
+            width: 45px;
+            height: 45px;
         }
 
         .chevron-up {
-            width: 24px;
-            height: 24px;
-            transition: all 0.3s ease;
-        }
-
-        /* Individual Card Bookmark Buttons */
-        .qa-item {
-            position: relative;
-            margin-bottom: 15px;
-            /* Reduced from 25px */
-            padding: 25px;
-            /* Increased from 20px */
-            border-radius: 8px;
-            border-left: 4px solid;
-            transition: all 0.3s ease;
-        }
-
-        .qa-bookmark-btn {
-            position: absolute;
-            top: 12px;
-            right: 12px;
-            width: 28px;
-            height: 28px;
-            border: none;
-            background: none;
-            cursor: pointer;
-            opacity: 0.6;
-            transition: all 0.3s ease;
-        }
-
-        .qa-bookmark-btn:hover {
-            opacity: 1;
-            transform: scale(1.1);
-        }
-
-        .qa-bookmark-btn.bookmarked {
-            opacity: 1;
-        }
-
-        .qa-bookmark-icon {
             width: 20px;
             height: 20px;
-            transition: all 0.3s ease;
         }
 
-        /* Ribbon Colors */
-        .ribbon-color-1 {
-            fill: #ff9ff3;
-            border-left-color: #ff9ff3;
+        .theme-buttons {
+            gap: 15px;
         }
 
-        .ribbon-color-2 {
-            fill: #54a0ff;
-            border-left-color: #54a0ff;
-        }
-
-        .ribbon-color-3 {
-            fill: #5f27cd;
-            border-left-color: #5f27cd;
-        }
-
-        .ribbon-color-4 {
-            fill: #00d2d3;
-            border-left-color: #00d2d3;
-        }
-
-        .ribbon-color-5 {
-            fill: #ff9f43;
-            border-left-color: #ff9f43;
-        }
-
-        .ribbon-color-6 {
-            fill: #10ac84;
-            border-left-color: #10ac84;
-        }
-
-        .ribbon-color-7 {
-            fill: #ee5a6f;
-            border-left-color: #ee5a6f;
-        }
-
-        .ribbon-color-8 {
-            fill: #c44569;
-            border-left-color: #c44569;
-        }
-
-        .ribbon-color-9 {
-            fill: #786fa6;
-            border-left-color: #786fa6;
-        }
-
-        .ribbon-color-10 {
-            fill: #f8b500;
-            border-left-color: #f8b500;
-        }
-
-        /* Loading and Error States */
-        .loading-state,
-        .error-state {
-            text-align: center;
-            padding: 40px 20px;
-        }
-
-        .loading-text {
-            font-size: 1.1em;
-            opacity: 0.7;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-
-            0%,
-            100% {
-                opacity: 0.7;
-            }
-
-            50% {
-                opacity: 1;
-            }
-        }
-
-        .error-text h3 {
-            margin-bottom: 10px;
-            font-size: 1.2em;
-        }
-
-        .error-text p {
-            margin-bottom: 20px;
-            opacity: 0.8;
-        }
-
-        .retry-btn {
-            padding: 10px 20px;
-            border: 2px solid;
-            border-radius: 5px;
-            background: transparent;
-            cursor: pointer;
-            font-family: inherit;
-            transition: all 0.3s ease;
-        }
-
-        .retry-btn:hover {
-            background: rgba(128, 128, 128, 0.1);
-        }
-
-        /* Updated Circular Theme Button Styles */
         .theme-btn {
-            width: 50px;
-            height: 50px;
-            border: 3px solid transparent;
-            border-radius: 50%;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-            background: none;
-            padding: 0;
-        }
-
-        .theme-btn:hover {
-            transform: scale(1.15);
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
-        }
-
-        .theme-btn.active {
-            border-color: currentColor;
-            transform: scale(1.1);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-        }
-
-        /* Individual theme button colors */
-        .theme-btn.light-btn {
-            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 50%, #e9ecef 100%);
-            border-color: #6c757d;
-        }
-
-        .theme-btn.light-btn.active {
-            border-color: #333333;
-        }
-
-        .theme-btn.dark-btn {
-            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #3a3a3a 100%);
-            border-color: #6c757d;
-        }
-
-        .theme-btn.dark-btn.active {
-            border-color: #e0e0e0;
-        }
-
-        .theme-btn.blue-btn {
-            background: linear-gradient(135deg, #0f1419 0%, #1e3a5f 50%, #64b5f6 100%);
-            border-color: #6c757d;
-        }
-
-        .theme-btn.blue-btn.active {
-            border-color: #64b5f6;
-        }
-
-        .theme-btn.sepia-btn {
-            background: linear-gradient(135deg, #f4f1e8 0%, #8b7765 50%, #5d4e37 100%);
-            border-color: #6c757d;
-        }
-
-        .theme-btn.sepia-btn.active {
-            border-color: #8b7765;
-        }
-
-        /* Checkmark for active state */
-        .theme-btn::after {
-            content: '✓';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: white;
-            font-size: 16px;
-            font-weight: bold;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
-        }
-
-        .theme-btn.active::after {
-            opacity: 1;
-        }
-
-        .theme-btn.light-btn::after {
-            color: #333333;
-            text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
-        }
-
-        /* Tooltip for theme buttons */
-        .theme-btn {
-            position: relative;
-        }
-
-        .theme-btn[data-theme]::before {
-            content: attr(data-theme);
-            position: absolute;
-            bottom: -35px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(0, 0, 0, 0.8);
-            color: white;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 12px;
-            white-space: nowrap;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s ease;
-            z-index: 1002;
-        }
-
-        .theme-btn:hover::before {
-            opacity: 1;
-        }
-
-        .catechism {
-            margin-top: 30px;
-        }
-
-        .qa-item {
-            margin-bottom: 25px;
-            padding: 20px;
-            border-radius: 8px;
-            border-left: 4px solid;
-            transition: all 0.3s ease;
-        }
-
-        .qa-item:hover {
-            transform: translateX(5px);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .question {
-            font-weight: bold;
-            margin-bottom: 8px;
-            font-size: 1.05em;
+            width: 45px;
+            height: 45px;
         }
 
         .answer {
-            margin-left: 20px;
-            font-size: 1em;
+            margin-left: 10px;
         }
 
-        /* Theme Styles */
-
-        /* Default Theme - Light */
-        body.light {
-            background: #f5f5f5;
-            color: #333333;
-            --desktop-bg: #f0f0f0;
-        }
-
-        body.light .container {
-            background: #f5f5f5;
-        }
-
-        @media (min-width: 768px) {
-            body.light .container {
-                background: #fafafa;
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            }
-        }
-
-        body.light .nav-bar {
-            border-bottom-color: #333333;
-        }
-
-        body.light .hamburger-lines {
-            background: #333333;
-        }
-
-        body.light .theme-menu {
-            background: #ffffff;
-            box-shadow: -4px 0 12px rgba(0, 0, 0, 0.1);
-        }
-
-        body.light .search-box {
-            border-color: #333333;
-            color: #333333;
-        }
-
-        body.light .search-box::placeholder {
-            color: #666666;
-        }
-
-        body.light .search-icon {
-            fill: #333333;
-        }
-
-        body.light .clear-search {
-            color: #333333;
-        }
-
-        body.light .bookmark-main-btn {
-            border-color: #333333;
-            color: #333333;
-        }
-
-        body.light .bookmark-ribbon {
-            fill: #333333;
-        }
-
-        body.light .bookmark-dropdown {
-            background: #ffffff;
-            color: #333333;
-        }
-
-        body.light .sticky-search {
-            background: rgba(245, 245, 245, 0.95);
-        }
-
-        body.light .scroll-to-top {
-            border-color: #333333;
-            color: #333333;
-            background: rgba(255, 255, 255, 0.9);
-        }
-
-        body.light .chevron-up {
-            fill: #333333;
-        }
-
-        body.light .retry-btn {
-            border-color: #333333;
-            color: #333333;
-        }
-
-        body.light .qa-item {
-            background: #ffffff;
-            border-left-color: #4a90e2;
-        }
-
-        /* Dark Theme */
-        body.dark {
-            background: #1a1a1a;
-            color: #e0e0e0;
-            --desktop-bg: #0f0f0f;
-        }
-
-        body.dark .container {
-            background: #1a1a1a;
-        }
-
-        @media (min-width: 768px) {
-            body.dark .container {
-                background: #2d2d2d;
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-            }
-        }
-
-        body.dark .nav-bar {
-            border-bottom-color: #e0e0e0;
-        }
-
-        body.dark .hamburger-lines {
-            background: #e0e0e0;
-        }
-
-        body.dark .theme-menu {
-            background: #2d2d2d;
-            box-shadow: -4px 0 12px rgba(0, 0, 0, 0.3);
-        }
-
-        body.dark .search-box {
-            border-color: #e0e0e0;
-            color: #e0e0e0;
-        }
-
-        body.dark .search-box::placeholder {
-            color: #a0a0a0;
-        }
-
-        body.dark .search-icon {
-            fill: #e0e0e0;
-        }
-
-        body.dark .clear-search {
-            color: #e0e0e0;
-        }
-
-        body.dark .bookmark-main-btn {
-            border-color: #e0e0e0;
-            color: #e0e0e0;
-        }
-
-        body.dark .bookmark-ribbon {
-            fill: #e0e0e0;
-        }
-
-        body.dark .bookmark-dropdown {
-            background: #2d2d2d;
-            color: #e0e0e0;
-        }
-
-        body.dark .sticky-search {
-            background: rgba(26, 26, 26, 0.95);
-        }
-
-        body.dark .scroll-to-top {
-            border-color: #e0e0e0;
-            color: #e0e0e0;
-            background: rgba(45, 45, 45, 0.9);
-        }
-
-        body.dark .chevron-up {
-            fill: #e0e0e0;
-        }
-
-        body.dark .retry-btn {
-            border-color: #e0e0e0;
-            color: #e0e0e0;
-        }
-
-        body.dark .qa-item {
-            background: #3a3a3a;
-            border-left-color: #64b5f6;
-        }
-
-        /* Blue Theme */
-        body.blue {
-            background: #1e3a5f;
-            color: #e1f5fe;
-            --desktop-bg: #1a334d;
-        }
-
-        body.blue .container {
-            background: #1e3a5f;
-        }
-
-        @media (min-width: 768px) {
-            body.blue .container {
-                background: #2c5282;
-                box-shadow: 0 4px 12px rgba(30, 58, 95, 0.3);
-            }
-        }
-
-        body.blue .nav-bar {
-            border-bottom-color: #64b5f6;
-        }
-
-        body.blue .hamburger-lines {
-            background: #64b5f6;
-        }
-
-        body.blue .theme-menu {
-            background: #1e3a5f;
-            box-shadow: -4px 0 12px rgba(30, 58, 95, 0.3);
-        }
-
-        body.blue .search-box {
-            border-color: #64b5f6;
-            color: #e1f5fe;
-        }
-
-        body.blue .search-box::placeholder {
-            color: #90caf9;
-        }
-
-        body.blue .search-icon {
-            fill: #64b5f6;
-        }
-
-        body.blue .clear-search {
-            color: #64b5f6;
-        }
-
-        body.blue .bookmark-main-btn {
-            border-color: #64b5f6;
-            color: #e1f5fe;
-        }
-
-        body.blue .bookmark-ribbon {
-            fill: #64b5f6;
-        }
-
-        body.blue .bookmark-dropdown {
-            background: #1e3a5f;
-            color: #e1f5fe;
-        }
-
-        body.blue .sticky-search {
-            background: rgba(30, 58, 95, 0.95);
-        }
-
-        body.blue .scroll-to-top {
-            border-color: #64b5f6;
-            color: #e1f5fe;
-            background: rgba(44, 82, 130, 0.9);
-        }
-
-        body.blue .chevron-up {
-            fill: #64b5f6;
-        }
-
-        body.blue .retry-btn {
-            border-color: #64b5f6;
-            color: #e1f5fe;
-        }
-
-        body.blue .qa-item {
-            background: #2c5282;
-            border-left-color: #90caf9;
-        }
-
-        /* Sepia Theme */
-        body.sepia {
-            background: #f4f1e8;
-            color: #5d4e37;
-            --desktop-bg: #ebe7da;
-        }
-
-        body.sepia .container {
-            background: #f4f1e8;
-        }
-
-        @media (min-width: 768px) {
-            body.sepia .container {
-                background: #faf6ed;
-                box-shadow: 0 4px 12px rgba(139, 119, 101, 0.2);
-            }
-        }
-
-        body.sepia .nav-bar {
-            border-bottom-color: #8b7765;
-        }
-
-        body.sepia .hamburger-lines {
-            background: #8b7765;
-        }
-
-        body.sepia .theme-menu {
-            background: #faf6ed;
-            box-shadow: -4px 0 12px rgba(139, 119, 101, 0.2);
-        }
-
-        body.sepia .search-box {
-            border-color: #8b7765;
-            color: #5d4e37;
-        }
-
-        body.sepia .search-box::placeholder {
-            color: #8b7765;
-        }
-
-        body.sepia .search-icon {
-            fill: #8b7765;
-        }
-
-        body.sepia .clear-search {
-            color: #8b7765;
-        }
-
-        body.sepia .bookmark-main-btn {
-            border-color: #8b7765;
-            color: #5d4e37;
-        }
-
-        body.sepia .bookmark-ribbon {
-            fill: #8b7765;
-        }
-
-        body.sepia .bookmark-dropdown {
-            background: #faf6ed;
-            color: #5d4e37;
+        .bookmark-dropdown {
+            position: fixed;
+            top: 130px;
+            left: 50%;
+            right: auto;
+            transform: translateX(-50%);
+            width: calc(100vw - 40px);
+            max-width: 350px;
         }
 
-        body.sepia .sticky-search {
-            background: rgba(244, 241, 232, 0.95);
+        .bookmark-dropdown.active {
+            transform: translateX(-50%) translateY(0);
         }
+    }
+</style>
+```
 
-        body.sepia .scroll-to-top {
-            border-color: #8b7765;
-            color: #5d4e37;
-            background: rgba(250, 246, 237, 0.9);
-        }
-
-        body.sepia .chevron-up {
-            fill: #8b7765;
-        }
-
-        body.sepia .retry-btn {
-            border-color: #8b7765;
-            color: #5d4e37;
-        }
-
-        body.sepia .qa-item {
-            background: #f0ead6;
-            border-left-color: #cd853f;
-        }
-
-        @media (max-width: 600px) {
-            body {
-                padding: 10px;
-            }
-
-            .container {
-                padding: 20px;
-            }
-
-            .nav-title {
-                font-size: 1.6rem;
-            }
-
-            .search-bookmark-container {
-                gap: 10px;
-                max-width: 100%;
-            }
-
-            .bookmark-main-btn {
-                width: 45px;
-                height: 45px;
-            }
-
-            .scroll-to-top {
-                bottom: 15px;
-                left: 15px;
-                width: 45px;
-                height: 45px;
-            }
-
-            .chevron-up {
-                width: 20px;
-                height: 20px;
-            }
-
-            .theme-buttons {
-                gap: 15px;
-            }
-
-            .theme-btn {
-                width: 45px;
-                height: 45px;
-            }
-
-            .answer {
-                margin-left: 10px;
-            }
-
-            .bookmark-dropdown {
-                width: calc(100vw - 40px);
-                max-width: 350px;
-            }
-        }
-    </style>
 </head>
 
 <body class="light">
@@ -1122,537 +1086,539 @@
             </div>
         </nav>
 
-        <!-- Search Section -->
-        <div class="search-section sticky-search">
-            <div class="search-bookmark-container">
-                <div class="search-container">
-                    <input type="text" class="search-box" placeholder="Search questions..." id="searchInput">
-                    <button class="clear-search" id="clearSearch">×</button>
-                    <svg class="search-icon" viewBox="0 0 24 24">
-                        <path
-                            d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
+```
+    <!-- Search Section -->
+    <div class="search-section sticky-search">
+        <div class="search-bookmark-container">
+            <div class="search-container">
+                <input type="text" class="search-box" placeholder="Search questions..." id="searchInput">
+                <button class="clear-search" id="clearSearch">×</button>
+                <svg class="search-icon" viewBox="0 0 24 24">
+                    <path
+                        d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
+                </svg>
+            </div>
+            
+            <!-- Bookmark Button -->
+            <div class="bookmark-section">
+                <button class="bookmark-main-btn" id="bookmarkMainBtn" title="View Bookmarks">
+                    <svg class="bookmark-ribbon" viewBox="0 0 24 24">
+                        <path d="M17,3H7A2,2 0 0,0 5,5V21L12,18L19,21V5C19,4.89 18.89,4 17,3Z" />
                     </svg>
-                </div>
-
-                <!-- Bookmark Button -->
-                <div class="bookmark-section">
-                    <button class="bookmark-main-btn" id="bookmarkMainBtn" title="View Bookmarks">
-                        <svg class="bookmark-ribbon" viewBox="0 0 24 24">
-                            <path d="M17,3H7A2,2 0 0,0 5,5V21L12,18L19,21V5C19,4.89 18.89,4 17,3Z" />
-                        </svg>
-                        <span class="bookmark-count" id="bookmarkCount">0</span>
-                    </button>
-
-                    <!-- Bookmark Dropdown -->
-                    <div class="bookmark-dropdown" id="bookmarkDropdown">
-                        <div class="bookmark-dropdown-header">
-                            <h3>Bookmarked Questions</h3>
-                        </div>
-                        <div class="bookmark-list" id="bookmarkList">
-                            <div class="no-bookmarks">No bookmarks yet. Click the bookmark icon on any question to save
-                                it!</div>
-                        </div>
+                    <span class="bookmark-count" id="bookmarkCount">0</span>
+                </button>
+                
+                <!-- Bookmark Dropdown -->
+                <div class="bookmark-dropdown" id="bookmarkDropdown">
+                    <div class="bookmark-dropdown-header">
+                        <h3>Bookmarked Questions</h3>
+                    </div>
+                    <div class="bookmark-list" id="bookmarkList">
+                        <div class="no-bookmarks">No bookmarks yet. Click the bookmark icon on any question to save it!</div>
                     </div>
                 </div>
             </div>
-
-            <div class="search-results" id="searchResults"></div>
         </div>
-
+        
         <div class="search-results" id="searchResults"></div>
-
-        <div class="menu-overlay" id="menuOverlay"></div>
-        <div class="theme-menu" id="themeMenu">
-            <h2>Choose Your Theme</h2>
-            <div class="theme-buttons">
-                <button class="theme-btn light-btn active" onclick="setTheme('light')" data-theme="Light"></button>
-                <button class="theme-btn dark-btn" onclick="setTheme('dark')" data-theme="Dark"></button>
-                <button class="theme-btn blue-btn" onclick="setTheme('blue')" data-theme="Blue"></button>
-                <button class="theme-btn sepia-btn" onclick="setTheme('sepia')" data-theme="Sepia"></button>
-            </div>
-        </div>
-
-        <div class="catechism">
-            <div class="loading-state" id="loadingState">
-                <div class="loading-text">Loading catechism questions...</div>
-            </div>
-
-            <div class="error-state" id="errorState" style="display: none;">
-                <div class="error-text">
-                    <h3>Unable to load questions</h3>
-                    <p>Please check your connection and try refreshing the page.</p>
-                    <button class="retry-btn" onclick="loadCatechism()">Try Again</button>
-                </div>
-            </div>
-
-            <div class="questions-container" id="questionsContainer">
-                <!-- Questions will be loaded here dynamically -->
-            </div>
-        </div>
-
-        <!-- Scroll to Top Button -->
-        <button class="scroll-to-top" id="scrollToTop" title="Back to top">
-            <svg class="chevron-up" viewBox="0 0 24 24">
-                <path d="M7.41,15.41L12,10.83L16.59,15.41L18,14L12,8L6,14L7.41,15.41Z" />
-            </svg>
-        </button>
     </div>
 
-    <script>
-        // Theme management
-        let currentTheme = 'light';
-        let allQuestions = [];
-        let bookmarks = [];
-        let catechismData = null;
+    <div class="search-results" id="searchResults"></div>
 
-        // JSON Data Loading
-        async function loadCatechism() {
-            try {
-                showLoadingState();
-                const response = await fetch('./data/childrens-catechism.json');
+    <div class="menu-overlay" id="menuOverlay"></div>
+    <div class="theme-menu" id="themeMenu">
+        <h2>Choose Your Theme</h2>
+        <div class="theme-buttons">
+            <button class="theme-btn light-btn active" onclick="setTheme('light')" data-theme="Light"></button>
+            <button class="theme-btn dark-btn" onclick="setTheme('dark')" data-theme="Dark"></button>
+            <button class="theme-btn blue-btn" onclick="setTheme('blue')" data-theme="Blue"></button>
+            <button class="theme-btn sepia-btn" onclick="setTheme('sepia')" data-theme="Sepia"></button>
+        </div>
+    </div>
 
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
+    <div class="catechism">
+        <div class="loading-state" id="loadingState">
+            <div class="loading-text">Loading catechism questions...</div>
+        </div>
+        
+        <div class="error-state" id="errorState" style="display: none;">
+            <div class="error-text">
+                <h3>Unable to load questions</h3>
+                <p>Please check your connection and try refreshing the page.</p>
+                <button class="retry-btn" onclick="loadCatechism()">Try Again</button>
+            </div>
+        </div>
+        
+        <div class="questions-container" id="questionsContainer">
+            <!-- Questions will be loaded here dynamically -->
+        </div>
+    </div>
 
-                catechismData = await response.json();
+    <!-- Scroll to Top Button -->
+    <button class="scroll-to-top" id="scrollToTop" title="Back to top">
+        <svg class="chevron-up" viewBox="0 0 24 24">
+            <path d="M7.41,15.41L12,10.83L16.59,15.41L18,14L12,8L6,14L7.41,15.41Z" />
+        </svg>
+    </button>
+</div>
 
-                if (!catechismData.questions || !Array.isArray(catechismData.questions)) {
-                    throw new Error('Invalid data format');
-                }
+<script>
+    // Theme management
+    let currentTheme = 'light';
+    let allQuestions = [];
+    let bookmarks = [];
+    let catechismData = null;
 
-                renderQuestions();
-                initializeSearch();
-                hideLoadingState();
-
-            } catch (error) {
-                console.error('Error loading catechism data:', error);
-                showErrorState();
+    // JSON Data Loading
+    async function loadCatechism() {
+        try {
+            showLoadingState();
+            const response = await fetch('./data/childrens-catechism.json');
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
             }
+            
+            catechismData = await response.json();
+            
+            if (!catechismData.questions || !Array.isArray(catechismData.questions)) {
+                throw new Error('Invalid data format');
+            }
+            
+            renderQuestions();
+            initializeSearch();
+            hideLoadingState();
+            
+        } catch (error) {
+            console.error('Error loading catechism data:', error);
+            showErrorState();
         }
+    }
 
-        function showLoadingState() {
-            document.getElementById('loadingState').style.display = 'block';
-            document.getElementById('errorState').style.display = 'none';
-            document.getElementById('questionsContainer').style.display = 'none';
+    function showLoadingState() {
+        document.getElementById('loadingState').style.display = 'block';
+        document.getElementById('errorState').style.display = 'none';
+        document.getElementById('questionsContainer').style.display = 'none';
+    }
+
+    function showErrorState() {
+        document.getElementById('loadingState').style.display = 'none';
+        document.getElementById('errorState').style.display = 'block';
+        document.getElementById('questionsContainer').style.display = 'none';
+    }
+
+    function hideLoadingState() {
+        document.getElementById('loadingState').style.display = 'none';
+        document.getElementById('errorState').style.display = 'none';
+        document.getElementById('questionsContainer').style.display = 'block';
+    }
+
+    function renderQuestions() {
+        const container = document.getElementById('questionsContainer');
+        container.innerHTML = '';
+        
+        catechismData.questions.forEach(questionData => {
+            const questionElement = createQuestionElement(questionData);
+            container.appendChild(questionElement);
+        });
+    }
+
+    function createQuestionElement(questionData) {
+        const qaItem = document.createElement('div');
+        qaItem.className = 'qa-item';
+        qaItem.setAttribute('data-question-id', questionData.id);
+        
+        qaItem.innerHTML = `
+            <button class="qa-bookmark-btn" onclick="toggleBookmark(${questionData.id})" title="Bookmark this question">
+                <svg class="qa-bookmark-icon" viewBox="0 0 24 24">
+                    <path d="M17,3H7A2,2 0 0,0 5,5V21L12,18L19,21V5C19,4.89 18.89,4 17,3Z" />
+                </svg>
+            </button>
+            <div class="question">Q. ${questionData.id}. ${questionData.question}</div>
+            <div class="answer">A. ${questionData.answer}</div>
+        `;
+        
+        return qaItem;
+    }
+
+    // Bookmark Management
+    function loadBookmarks() {
+        try {
+            const saved = localStorage.getItem('shortercat-bookmarks');
+            bookmarks = saved ? JSON.parse(saved) : [];
+            updateBookmarkUI();
+        } catch (e) {
+            bookmarks = [];
         }
+    }
 
-        function showErrorState() {
-            document.getElementById('loadingState').style.display = 'none';
-            document.getElementById('errorState').style.display = 'block';
-            document.getElementById('questionsContainer').style.display = 'none';
+    function saveBookmarks() {
+        try {
+            localStorage.setItem('shortercat-bookmarks', JSON.stringify(bookmarks));
+        } catch (e) {}
+    }
+
+    function toggleBookmark(questionId) {
+        const index = bookmarks.findIndex(b => b.id === questionId);
+        
+        if (index === -1) {
+            // Add bookmark - get data from JSON
+            const questionData = catechismData.questions.find(q => q.id === questionId);
+            if (questionData) {
+                bookmarks.push({
+                    id: questionId,
+                    question: `Q. ${questionData.id}. ${questionData.question}`,
+                    answer: `A. ${questionData.answer}`,
+                    timestamp: Date.now()
+                });
+            }
+        } else {
+            // Remove bookmark
+            bookmarks.splice(index, 1);
         }
+        
+        saveBookmarks();
+        updateBookmarkUI();
+    }
 
-        function hideLoadingState() {
-            document.getElementById('loadingState').style.display = 'none';
-            document.getElementById('errorState').style.display = 'none';
-            document.getElementById('questionsContainer').style.display = 'block';
+    function updateBookmarkUI() {
+        // Update bookmark count
+        const countElement = document.getElementById('bookmarkCount');
+        const count = bookmarks.length;
+        countElement.textContent = count;
+        countElement.classList.toggle('visible', count > 0);
+        
+        // Update individual bookmark buttons
+        document.querySelectorAll('.qa-bookmark-btn').forEach(btn => {
+            const questionId = parseInt(btn.closest('.qa-item').dataset.questionId);
+            const isBookmarked = bookmarks.some(b => b.id === questionId);
+            btn.classList.toggle('bookmarked', isBookmarked);
+        });
+        
+        // Update bookmark dropdown
+        updateBookmarkDropdown();
+    }
+
+    function updateBookmarkDropdown() {
+        const bookmarkList = document.getElementById('bookmarkList');
+        
+        if (bookmarks.length === 0) {
+            bookmarkList.innerHTML = '<div class="no-bookmarks">No bookmarks yet. Click the bookmark icon on any question to save it!</div>';
+            return;
         }
-
-        function renderQuestions() {
-            const container = document.getElementById('questionsContainer');
-            container.innerHTML = '';
-
-            catechismData.questions.forEach(questionData => {
-                const questionElement = createQuestionElement(questionData);
-                container.appendChild(questionElement);
-            });
-        }
-
-        function createQuestionElement(questionData) {
-            const qaItem = document.createElement('div');
-            qaItem.className = 'qa-item';
-            qaItem.setAttribute('data-question-id', questionData.id);
-
-            qaItem.innerHTML = `
-                <button class="qa-bookmark-btn" onclick="toggleBookmark(${questionData.id})" title="Bookmark this question">
-                    <svg class="qa-bookmark-icon" viewBox="0 0 24 24">
+        
+        // Show only the 10 most recent bookmarks
+        const recentBookmarks = bookmarks
+            .sort((a, b) => b.timestamp - a.timestamp)
+            .slice(0, 10);
+        
+        bookmarkList.innerHTML = recentBookmarks.map((bookmark, index) => {
+            const colorClass = `ribbon-color-${(index % 10) + 1}`;
+            return `
+                <div class="bookmark-item ${colorClass}" onclick="scrollToQuestion(${bookmark.id})">
+                    <svg class="bookmark-ribbon-small ${colorClass}" viewBox="0 0 24 24">
                         <path d="M17,3H7A2,2 0 0,0 5,5V21L12,18L19,21V5C19,4.89 18.89,4 17,3Z" />
                     </svg>
-                </button>
-                <div class="question">Q. ${questionData.id}. ${questionData.question}</div>
-                <div class="answer">A. ${questionData.answer}</div>
+                    <div class="bookmark-item-text">
+                        ${bookmark.question}
+                    </div>
+                    <button class="bookmark-remove" onclick="event.stopPropagation(); removeBookmark(${bookmark.id})" title="Remove bookmark">×</button>
+                </div>
             `;
+        }).join('');
+    }
 
-            return qaItem;
+    function scrollToQuestion(questionId) {
+        const questionElement = document.querySelector(`[data-question-id="${questionId}"]`);
+        if (questionElement) {
+            questionElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            
+            // Brief highlight effect
+            questionElement.style.transform = 'scale(1.02)';
+            setTimeout(() => {
+                questionElement.style.transform = '';
+            }, 300);
         }
+        
+        // Close dropdown
+        toggleBookmarkDropdown();
+    }
 
-        // Bookmark Management
-        function loadBookmarks() {
-            try {
-                const saved = localStorage.getItem('shortercat-bookmarks');
-                bookmarks = saved ? JSON.parse(saved) : [];
-                updateBookmarkUI();
-            } catch (e) {
-                bookmarks = [];
-            }
-        }
-
-        function saveBookmarks() {
-            try {
-                localStorage.setItem('shortercat-bookmarks', JSON.stringify(bookmarks));
-            } catch (e) { }
-        }
-
-        function toggleBookmark(questionId) {
-            const index = bookmarks.findIndex(b => b.id === questionId);
-
-            if (index === -1) {
-                // Add bookmark - get data from JSON
-                const questionData = catechismData.questions.find(q => q.id === questionId);
-                if (questionData) {
-                    bookmarks.push({
-                        id: questionId,
-                        question: `Q. ${questionData.id}. ${questionData.question}`,
-                        answer: `A. ${questionData.answer}`,
-                        timestamp: Date.now()
-                    });
-                }
-            } else {
-                // Remove bookmark
-                bookmarks.splice(index, 1);
-            }
-
+    function removeBookmark(questionId) {
+        const index = bookmarks.findIndex(b => b.id === questionId);
+        if (index !== -1) {
+            bookmarks.splice(index, 1);
             saveBookmarks();
             updateBookmarkUI();
         }
+    }
 
-        function updateBookmarkUI() {
-            // Update bookmark count
-            const countElement = document.getElementById('bookmarkCount');
-            const count = bookmarks.length;
-            countElement.textContent = count;
-            countElement.classList.toggle('visible', count > 0);
+    function toggleBookmarkDropdown() {
+        const dropdown = document.getElementById('bookmarkDropdown');
+        dropdown.classList.toggle('active');
+    }
 
-            // Update individual bookmark buttons
-            document.querySelectorAll('.qa-bookmark-btn').forEach(btn => {
-                const questionId = parseInt(btn.closest('.qa-item').dataset.questionId);
-                const isBookmarked = bookmarks.some(b => b.id === questionId);
-                btn.classList.toggle('bookmarked', isBookmarked);
+    // Scroll to Top Functionality
+    function updateScrollToTop() {
+        const scrollToTopBtn = document.getElementById('scrollToTop');
+        const questionsContainer = document.getElementById('questionsContainer');
+        const questions = questionsContainer.querySelectorAll('.qa-item');
+        
+        if (questions.length >= 15) {
+            // Calculate approximate position of 15th question
+            const fifteenthQuestion = questions[14]; // 0-indexed
+            const questionRect = fifteenthQuestion.getBoundingClientRect();
+            const windowTop = window.pageYOffset || document.documentElement.scrollTop;
+            const questionTop = questionRect.top + windowTop;
+            
+            // Show button when scrolled past 15th question
+            if (window.scrollY > questionTop - window.innerHeight) {
+                scrollToTopBtn.classList.add('visible');
+            } else {
+                scrollToTopBtn.classList.remove('visible');
+            }
+        }
+    }
+
+    function scrollToTop() {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    }
+
+    function setTheme(theme) {
+        // Remove current theme class
+        document.body.className = theme;
+        currentTheme = theme;
+
+        // Save theme to localStorage
+        try {
+            localStorage.setItem('shortercat-theme', theme);
+        } catch (e) {}
+
+        // Update button states
+        const buttons = document.querySelectorAll('.theme-btn');
+        buttons.forEach(btn => {
+            btn.classList.remove('active');
+        });
+
+        // Set active button
+        const activeBtn = document.querySelector(`.theme-btn.${theme}-btn`);
+        if (activeBtn) {
+            activeBtn.classList.add('active');
+        }
+
+        // Close menu after selection
+        closeMenu();
+    }
+
+    // Menu functionality
+    function toggleMenu() {
+        const hamburger = document.getElementById('hamburger');
+        const menuOverlay = document.getElementById('menuOverlay');
+        const themeMenu = document.getElementById('themeMenu');
+
+        hamburger.classList.toggle('active');
+        menuOverlay.classList.toggle('active');
+        themeMenu.classList.toggle('active');
+    }
+
+    function closeMenu() {
+        const hamburger = document.getElementById('hamburger');
+        const menuOverlay = document.getElementById('menuOverlay');
+        const themeMenu = document.getElementById('themeMenu');
+
+        hamburger.classList.remove('active');
+        menuOverlay.classList.remove('active');
+        themeMenu.classList.remove('active');
+    }
+
+    // Search functionality
+    function initializeSearch() {
+        // Collect all questions and answers from JSON data
+        const qaItems = document.querySelectorAll('.qa-item');
+        allQuestions = Array.from(qaItems).map((item, index) => {
+            const questionData = catechismData.questions[index];
+            return {
+                element: item,
+                question: item.querySelector('.question').textContent,
+                answer: item.querySelector('.answer').textContent,
+                index: index,
+                id: questionData.id
+            };
+        });
+    }
+
+    function performSearch(query) {
+        const searchResults = document.getElementById('searchResults');
+
+        if (!query.trim()) {
+            // Show all questions and remove all highlights
+            allQuestions.forEach(item => {
+                item.element.style.display = 'block';
+                removeHighlights(item.element);
             });
-
-            // Update bookmark dropdown
-            updateBookmarkDropdown();
+            searchResults.textContent = '';
+            document.getElementById('clearSearch').classList.remove('visible');
+            return;
         }
 
-        function updateBookmarkDropdown() {
-            const bookmarkList = document.getElementById('bookmarkList');
+        document.getElementById('clearSearch').classList.add('visible');
 
-            if (bookmarks.length === 0) {
-                bookmarkList.innerHTML = '<div class="no-bookmarks">No bookmarks yet. Click the bookmark icon on any question to save it!</div>';
-                return;
+        const lowerQuery = query.toLowerCase();
+        let visibleCount = 0;
+
+        allQuestions.forEach(item => {
+            const questionMatch = item.question.toLowerCase().includes(lowerQuery);
+            const answerMatch = item.answer.toLowerCase().includes(lowerQuery);
+
+            if (questionMatch || answerMatch) {
+                item.element.style.display = 'block';
+                visibleCount++;
+
+                // Highlight matching text
+                highlightText(item.element, query);
+            } else {
+                item.element.style.display = 'none';
             }
+        });
 
-            // Show only the 10 most recent bookmarks
-            const recentBookmarks = bookmarks
-                .sort((a, b) => b.timestamp - a.timestamp)
-                .slice(0, 10);
-
-            bookmarkList.innerHTML = recentBookmarks.map((bookmark, index) => {
-                const colorClass = `ribbon-color-${(index % 10) + 1}`;
-                return `
-                    <div class="bookmark-item ${colorClass}" onclick="scrollToQuestion(${bookmark.id})">
-                        <svg class="bookmark-ribbon-small ${colorClass}" viewBox="0 0 24 24">
-                            <path d="M17,3H7A2,2 0 0,0 5,5V21L12,18L19,21V5C19,4.89 18.89,4 17,3Z" />
-                        </svg>
-                        <div class="bookmark-item-text">
-                            ${bookmark.question}
-                        </div>
-                        <button class="bookmark-remove" onclick="event.stopPropagation(); removeBookmark(${bookmark.id})" title="Remove bookmark">×</button>
-                    </div>
-                `;
-            }).join('');
+        // Update search results
+        if (visibleCount === 0) {
+            searchResults.textContent = 'No questions found matching your search.';
+        } else if (visibleCount === 1) {
+            searchResults.textContent = '1 question found';
+        } else {
+            searchResults.textContent = `${visibleCount} questions found`;
         }
+    }
 
-        function scrollToQuestion(questionId) {
-            const questionElement = document.querySelector(`[data-question-id="${questionId}"]`);
-            if (questionElement) {
-                questionElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    function highlightText(element, query) {
+        const question = element.querySelector('.question');
+        const answer = element.querySelector('.answer');
 
-                // Brief highlight effect
-                questionElement.style.transform = 'scale(1.02)';
-                setTimeout(() => {
-                    questionElement.style.transform = '';
-                }, 300);
+        // Remove existing highlights
+        removeHighlights(element);
+
+        if (query.trim()) {
+            const regex = new RegExp(`(${escapeRegex(query)})`, 'gi');
+
+            question.innerHTML = question.textContent.replace(regex, '<mark style="background-color: yellow; color: black;">$1</mark>');
+            answer.innerHTML = answer.textContent.replace(regex, '<mark style="background-color: yellow; color: black;">$1</mark>');
+        }
+    }
+
+    function removeHighlights(element) {
+        const question = element.querySelector('.question');
+        const answer = element.querySelector('.answer');
+
+        // Reset to plain text, removing any HTML tags including highlights
+        question.innerHTML = question.textContent;
+        answer.innerHTML = answer.textContent;
+    }
+
+    function escapeRegex(string) {
+        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+
+    function clearSearch() {
+        const searchInput = document.getElementById('searchInput');
+        searchInput.value = '';
+        performSearch('');
+        searchInput.focus();
+    }
+
+    // Event listeners
+    document.addEventListener('DOMContentLoaded', function() {
+        // Restore theme from localStorage if available
+        try {
+            const savedTheme = localStorage.getItem('shortercat-theme');
+            if (savedTheme && savedTheme !== currentTheme) {
+                setTheme(savedTheme);
             }
+        } catch (e) {}
 
-            // Close dropdown
-            toggleBookmarkDropdown();
-        }
+        // Load bookmarks
+        loadBookmarks();
 
-        function removeBookmark(questionId) {
-            const index = bookmarks.findIndex(b => b.id === questionId);
-            if (index !== -1) {
-                bookmarks.splice(index, 1);
-                saveBookmarks();
-                updateBookmarkUI();
-            }
-        }
+        // Load catechism data
+        loadCatechism();
 
-        function toggleBookmarkDropdown() {
+        // Add smooth scroll behavior
+        document.documentElement.style.scrollBehavior = 'smooth';
+
+        // Hamburger menu
+        document.getElementById('hamburger').addEventListener('click', toggleMenu);
+        document.getElementById('menuOverlay').addEventListener('click', closeMenu);
+
+        // Bookmark functionality
+        document.getElementById('bookmarkMainBtn').addEventListener('click', toggleBookmarkDropdown);
+        
+        // Scroll to top functionality
+        document.getElementById('scrollToTop').addEventListener('click', scrollToTop);
+        window.addEventListener('scroll', updateScrollToTop);
+        
+        // Close bookmark dropdown when clicking outside
+        document.addEventListener('click', function(e) {
             const dropdown = document.getElementById('bookmarkDropdown');
-            dropdown.classList.toggle('active');
-        }
-
-        // Scroll to Top Functionality
-        function updateScrollToTop() {
-            const scrollToTopBtn = document.getElementById('scrollToTop');
-            const questionsContainer = document.getElementById('questionsContainer');
-            const questions = questionsContainer.querySelectorAll('.qa-item');
-
-            if (questions.length >= 15) {
-                // Calculate approximate position of 15th question
-                const fifteenthQuestion = questions[14]; // 0-indexed
-                const questionRect = fifteenthQuestion.getBoundingClientRect();
-                const windowTop = window.pageYOffset || document.documentElement.scrollTop;
-                const questionTop = questionRect.top + windowTop;
-
-                // Show button when scrolled past 15th question
-                if (window.scrollY > questionTop - window.innerHeight) {
-                    scrollToTopBtn.classList.add('visible');
-                } else {
-                    scrollToTopBtn.classList.remove('visible');
-                }
+            const bookmarkBtn = document.getElementById('bookmarkMainBtn');
+            
+            if (!dropdown.contains(e.target) && !bookmarkBtn.contains(e.target)) {
+                dropdown.classList.remove('active');
             }
-        }
-
-        function scrollToTop() {
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
-        }
-
-        function setTheme(theme) {
-            // Remove current theme class
-            document.body.className = theme;
-            currentTheme = theme;
-
-            // Save theme to localStorage
-            try {
-                localStorage.setItem('shortercat-theme', theme);
-            } catch (e) { }
-
-            // Update button states
-            const buttons = document.querySelectorAll('.theme-btn');
-            buttons.forEach(btn => {
-                btn.classList.remove('active');
-            });
-
-            // Set active button
-            const activeBtn = document.querySelector(`.theme-btn.${theme}-btn`);
-            if (activeBtn) {
-                activeBtn.classList.add('active');
-            }
-
-            // Close menu after selection
-            closeMenu();
-        }
-
-        // Menu functionality
-        function toggleMenu() {
-            const hamburger = document.getElementById('hamburger');
-            const menuOverlay = document.getElementById('menuOverlay');
-            const themeMenu = document.getElementById('themeMenu');
-
-            hamburger.classList.toggle('active');
-            menuOverlay.classList.toggle('active');
-            themeMenu.classList.toggle('active');
-        }
-
-        function closeMenu() {
-            const hamburger = document.getElementById('hamburger');
-            const menuOverlay = document.getElementById('menuOverlay');
-            const themeMenu = document.getElementById('themeMenu');
-
-            hamburger.classList.remove('active');
-            menuOverlay.classList.remove('active');
-            themeMenu.classList.remove('active');
-        }
+        });
 
         // Search functionality
-        function initializeSearch() {
-            // Collect all questions and answers from JSON data
-            const qaItems = document.querySelectorAll('.qa-item');
-            allQuestions = Array.from(qaItems).map((item, index) => {
-                const questionData = catechismData.questions[index];
-                return {
-                    element: item,
-                    question: item.querySelector('.question').textContent,
-                    answer: item.querySelector('.answer').textContent,
-                    index: index,
-                    id: questionData.id
-                };
-            });
-        }
+        const searchInput = document.getElementById('searchInput');
+        const clearButton = document.getElementById('clearSearch');
 
-        function performSearch(query) {
-            const searchResults = document.getElementById('searchResults');
-
-            if (!query.trim()) {
-                // Show all questions and remove all highlights
-                allQuestions.forEach(item => {
-                    item.element.style.display = 'block';
-                    removeHighlights(item.element);
-                });
-                searchResults.textContent = '';
-                document.getElementById('clearSearch').classList.remove('visible');
-                return;
-            }
-
-            document.getElementById('clearSearch').classList.add('visible');
-
-            const lowerQuery = query.toLowerCase();
-            let visibleCount = 0;
-
-            allQuestions.forEach(item => {
-                const questionMatch = item.question.toLowerCase().includes(lowerQuery);
-                const answerMatch = item.answer.toLowerCase().includes(lowerQuery);
-
-                if (questionMatch || answerMatch) {
-                    item.element.style.display = 'block';
-                    visibleCount++;
-
-                    // Highlight matching text
-                    highlightText(item.element, query);
-                } else {
-                    item.element.style.display = 'none';
-                }
-            });
-
-            // Update search results
-            if (visibleCount === 0) {
-                searchResults.textContent = 'No questions found matching your search.';
-            } else if (visibleCount === 1) {
-                searchResults.textContent = '1 question found';
-            } else {
-                searchResults.textContent = `${visibleCount} questions found`;
-            }
-        }
-
-        function highlightText(element, query) {
-            const question = element.querySelector('.question');
-            const answer = element.querySelector('.answer');
-
-            // Remove existing highlights
-            removeHighlights(element);
-
-            if (query.trim()) {
-                const regex = new RegExp(`(${escapeRegex(query)})`, 'gi');
-
-                question.innerHTML = question.textContent.replace(regex, '<mark style="background-color: yellow; color: black;">$1</mark>');
-                answer.innerHTML = answer.textContent.replace(regex, '<mark style="background-color: yellow; color: black;">$1</mark>');
-            }
-        }
-
-        function removeHighlights(element) {
-            const question = element.querySelector('.question');
-            const answer = element.querySelector('.answer');
-
-            // Reset to plain text, removing any HTML tags including highlights
-            question.innerHTML = question.textContent;
-            answer.innerHTML = answer.textContent;
-        }
-
-        function escapeRegex(string) {
-            return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-        }
-
-        function clearSearch() {
-            const searchInput = document.getElementById('searchInput');
-            searchInput.value = '';
-            performSearch('');
-            searchInput.focus();
-        }
-
-        // Event listeners
-        document.addEventListener('DOMContentLoaded', function () {
-            // Restore theme from localStorage if available
-            try {
-                const savedTheme = localStorage.getItem('shortercat-theme');
-                if (savedTheme && savedTheme !== currentTheme) {
-                    setTheme(savedTheme);
-                }
-            } catch (e) { }
-
-            // Load bookmarks
-            loadBookmarks();
-
-            // Load catechism data
-            loadCatechism();
-
-            // Add smooth scroll behavior
-            document.documentElement.style.scrollBehavior = 'smooth';
-
-            // Hamburger menu
-            document.getElementById('hamburger').addEventListener('click', toggleMenu);
-            document.getElementById('menuOverlay').addEventListener('click', closeMenu);
-
-            // Bookmark functionality
-            document.getElementById('bookmarkMainBtn').addEventListener('click', toggleBookmarkDropdown);
-
-            // Scroll to top functionality
-            document.getElementById('scrollToTop').addEventListener('click', scrollToTop);
-            window.addEventListener('scroll', updateScrollToTop);
-
-            // Close bookmark dropdown when clicking outside
-            document.addEventListener('click', function (e) {
-                const dropdown = document.getElementById('bookmarkDropdown');
-                const bookmarkBtn = document.getElementById('bookmarkMainBtn');
-
-                if (!dropdown.contains(e.target) && !bookmarkBtn.contains(e.target)) {
-                    dropdown.classList.remove('active');
-                }
-            });
-
-            // Search functionality
-            const searchInput = document.getElementById('searchInput');
-            const clearButton = document.getElementById('clearSearch');
-
-            searchInput.addEventListener('input', function (e) {
-                performSearch(e.target.value);
-            });
-
-            clearButton.addEventListener('click', clearSearch);
-
-            // Keyboard shortcuts
-            document.addEventListener('keydown', function (e) {
-                // Escape to close menus
-                if (e.key === 'Escape') {
-                    closeMenu();
-                    document.getElementById('bookmarkDropdown').classList.remove('active');
-                }
-
-                // Ctrl/Cmd + F to focus search
-                if ((e.ctrlKey || e.metaKey) && e.key === 'f') {
-                    e.preventDefault();
-                    searchInput.focus();
-                }
-
-                // Theme shortcuts
-                if (e.ctrlKey || e.metaKey) {
-                    switch (e.key) {
-                        case '1':
-                            e.preventDefault();
-                            setTheme('light');
-                            break;
-                        case '2':
-                            e.preventDefault();
-                            setTheme('dark');
-                            break;
-                        case '3':
-                            e.preventDefault();
-                            setTheme('blue');
-                            break;
-                        case '4':
-                            e.preventDefault();
-                            setTheme('sepia');
-                            break;
-                    }
-                }
-            });
+        searchInput.addEventListener('input', function(e) {
+            performSearch(e.target.value);
         });
-    </script>
+
+        clearButton.addEventListener('click', clearSearch);
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            // Escape to close menus
+            if (e.key === 'Escape') {
+                closeMenu();
+                document.getElementById('bookmarkDropdown').classList.remove('active');
+            }
+
+            // Ctrl/Cmd + F to focus search
+            if ((e.ctrlKey || e.metaKey) && e.key === 'f') {
+                e.preventDefault();
+                searchInput.focus();
+            }
+
+            // Theme shortcuts
+            if (e.ctrlKey || e.metaKey) {
+                switch(e.key) {
+                    case '1':
+                        e.preventDefault();
+                        setTheme('light');
+                        break;
+                    case '2':
+                        e.preventDefault();
+                        setTheme('dark');
+                        break;
+                    case '3':
+                        e.preventDefault();
+                        setTheme('blue');
+                        break;
+                    case '4':
+                        e.preventDefault();
+                        setTheme('sepia');
+                        break;
+                }
+            }
+        });
+    });
+</script>
+```
+
 </body>
 
 </html>
