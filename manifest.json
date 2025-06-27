@@ -3,8 +3,6 @@
     "short_name": "Catechism",
     "start_url": "./index.html",
     "display": "standalone",
-    "background_color": "#ffffff",
-    "theme_color": "#4a90e2",
     "icons": [
       {
         "src": "/apple-touch-icon.png",
