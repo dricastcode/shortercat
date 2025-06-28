@@ -471,6 +471,7 @@ body {
     opacity: 0;
     max-height: 0;
     overflow: hidden;
+    pointer-events: none;
     transition: all 0.3s ease;
 }
 
@@ -478,6 +479,7 @@ body {
     opacity: 1;
     max-height: 100px;
     padding: 20px 25px 25px;
+    pointer-events: auto;
 }
 
 .action-buttons {
@@ -507,21 +509,21 @@ body {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-.action-btn.favorite-btn { border-color: #ff4757; color: #ff4757; }
-.action-btn.favorite-btn:hover { background: #ff4757; color: white; }
-.action-btn.favorite-btn.active { background: #ff4757; color: white; }
+.action-btn.favorite-btn { border-color: #e74c3c; color: #e74c3c; }
+.action-btn.favorite-btn:hover { background: #e74c3c; color: white; }
+.action-btn.favorite-btn.active { background: #e74c3c; color: white; }
 
-.action-btn.bookmark-btn { border-color: #3742fa; color: #3742fa; }
-.action-btn.bookmark-btn:hover { background: #3742fa; color: white; }
-.action-btn.bookmark-btn.active { background: #3742fa; color: white; }
+.action-btn.bookmark-btn { border-color: #5dade2; color: #5dade2; }
+.action-btn.bookmark-btn:hover { background: #5dade2; color: white; }
+.action-btn.bookmark-btn.active { background: #5dade2; color: white; }
 
-.action-btn.note-btn { border-color: #2ed573; color: #2ed573; }
-.action-btn.note-btn:hover { background: #2ed573; color: white; }
-.action-btn.note-btn.active { background: #2ed573; color: white; }
+.action-btn.note-btn { border-color: #58d68d; color: #58d68d; }
+.action-btn.note-btn:hover { background: #58d68d; color: white; }
+.action-btn.note-btn.active { background: #58d68d; color: white; }
 
-.action-btn.copy-btn { border-color: #ffa502; color: #ffa502; }
-.action-btn.copy-btn:hover { background: #ffa502; color: white; }
-.action-btn.copy-btn.copied { background: #2ed573; border-color: #2ed573; color: white; }
+.action-btn.copy-btn { border-color: #f39c12; color: #f39c12; }
+.action-btn.copy-btn:hover { background: #f39c12; color: white; }
+.action-btn.copy-btn.copied { background: #58d68d; border-color: #58d68d; color: white; }
 
 .action-icon {
     width: 16px;
@@ -749,13 +751,9 @@ body.light {
     --primary-color: #3742fa;
 }
 
-body.light .container {
-    background: #f5f5f5;
-}
-
 @media (min-width: 768px) {
     body.light .container {
-        background: #fafafa;
+        /* background: #fafafa; */
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
 }
@@ -787,11 +785,10 @@ body.dark {
     --primary-color: #64b5f6;
 }
 
-body.dark .container { background: #1a1a1a; }
 
 @media (min-width: 768px) {
     body.dark .container {
-        background: #2d2d2d;
+        /* background: #2d2d2d; */
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     }
 }
@@ -823,11 +820,9 @@ body.blue {
     --primary-color: #90caf9;
 }
 
-body.blue .container { background: #1e3a5f; }
-
 @media (min-width: 768px) {
     body.blue .container {
-        background: #2c5282;
+        /* background: #2c5282; */
         box-shadow: 0 4px 12px rgba(30, 58, 95, 0.3);
     }
 }
@@ -859,11 +854,9 @@ body.sepia {
     --primary-color: #8b7765;
 }
 
-body.sepia .container { background: #f4f1e8; }
-
 @media (min-width: 768px) {
     body.sepia .container {
-        background: #faf6ed;
+        /* background: #faf6ed; */
         box-shadow: 0 4px 12px rgba(139, 119, 101, 0.2);
     }
 }
