@@ -1,8 +1,12 @@
 // ===== GLOBAL VARIABLES =====
 let currentTheme = 'light';
+let currentTab = 'home';
 let allQuestions = [];
+let favorites = [];
 let bookmarks = [];
+let notes = {};
 let catechismData = null;
+let expandedCard = null;
 
 // ===== UTILITY FUNCTIONS =====
 function escapeRegex(string) {
@@ -19,6 +23,22 @@ function debounce(func, wait) {
         clearTimeout(timeout);
         timeout = setTimeout(later, wait);
     };
+}
+
+function formatEmailSubject(questionData) {
+    return `Catechism Q${questionData.id}: ${questionData.question}`;
+}
+
+function formatEmailBody(questionData, userNote = '') {
+    let body = `Q${questionData.id}: ${questionData.question}\n\n`;
+    body += `A: ${questionData.answer}\n\n`;
+
+    if (userNote) {
+        body += `My Notes:\n${userNote}\n\n`;
+    }
+
+    body += `---\nFrom Children's Catechism App`;
+    return body;
 }
 
 // ===== DATA LOADING =====
@@ -81,45 +101,125 @@ function createQuestionElement(questionData) {
     qaItem.className = 'qa-item';
     qaItem.setAttribute('data-question-id', questionData.id);
 
+    const isFavorited = favorites.some(f => f.id === questionData.id);
+    const isBookmarked = bookmarks.some(b => b.id === questionData.id);
+    const hasNote = notes[questionData.id];
+
     qaItem.innerHTML = `
-        <button class="qa-bookmark-btn" onclick="toggleBookmark(${questionData.id})" title="Bookmark this question">
-            <svg class="qa-bookmark-icon" viewBox="0 0 24 24">
-                <path d="M17,3H7A2,2 0 0,0 5,5V21L12,18L19,21V5C19,4.89 18.89,4 17,3Z" />
-            </svg>
-        </button>
-        <div class="question">Q. ${questionData.id}. ${questionData.question}</div>
-        <div class="answer">A. ${questionData.answer}</div>
+        <div class="qa-content" onclick="toggleCardExpansion(${questionData.id})">
+            <div class="question">Q${questionData.id}: ${questionData.question}</div>
+            <div class="answer">A: ${questionData.answer}</div>
+        </div>
+        <div class="qa-actions">
+            <div class="action-buttons">
+                <button class="action-btn favorite-btn ${isFavorited ? 'active' : ''}" onclick="event.stopPropagation(); toggleFavorite(${questionData.id})" title="Add to favorites">
+                    <svg class="action-icon" viewBox="0 0 24 24">
+                        <path d="M12,21.35L10.55,20.03C5.4,15.36 2,12.27 2,8.5 2,5.41 4.42,3 7.5,3C9.24,3 10.91,3.81 12,5.08C13.09,3.81 14.76,3 16.5,3C19.58,3 22,5.41 22,8.5C22,12.27 18.6,15.36 13.45,20.03L12,21.35Z" />
+                    </svg>
+                    <span>Favorite</span>
+                </button>
+                <button class="action-btn bookmark-btn ${isBookmarked ? 'active' : ''}" onclick="event.stopPropagation(); toggleBookmark(${questionData.id})" title="Bookmark for later">
+                    <svg class="action-icon" viewBox="0 0 24 24">
+                        <path d="M17,3H7A2,2 0 0,0 5,5V21L12,18L19,21V5C19,4.89 18.89,4 17,3Z" />
+                    </svg>
+                    <span>Bookmark</span>
+                </button>
+                <button class="action-btn note-btn ${hasNote ? 'active' : ''}" onclick="event.stopPropagation(); openNotesModal(${questionData.id})" title="Add personal note">
+                    <svg class="action-icon" viewBox="0 0 24 24">
+                        <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z" />
+                    </svg>
+                    <span>Note</span>
+                </button>
+                <a class="action-btn email-btn" href="#" onclick="event.stopPropagation(); shareViaEmail(${questionData.id})" title="Share via email">
+                    <svg class="action-icon" viewBox="0 0 24 24">
+                        <path d="M20,8L12,13L4,8V6L12,11L20,6M20,4H4C2.89,4 2,4.89 2,6V18A2,2 0 0,0 4,20H20A2,2 0 0,0 22,18V6C22,4.89 21.1,4 20,4Z" />
+                    </svg>
+                    <span>Email</span>
+                </a>
+            </div>
+        </div>
     `;
 
     return qaItem;
 }
 
+// ===== CARD EXPANSION =====
+function toggleCardExpansion(questionId) {
+    const card = document.querySelector(`[data-question-id="${questionId}"]`);
+
+    // Close any other expanded card
+    if (expandedCard && expandedCard !== card) {
+        expandedCard.classList.remove('expanded');
+    }
+
+    // Toggle current card
+    if (card.classList.contains('expanded')) {
+        card.classList.remove('expanded');
+        expandedCard = null;
+    } else {
+        card.classList.add('expanded');
+        expandedCard = card;
+    }
+}
+
+// ===== TAB MANAGEMENT =====
+function switchTab(tabName) {
+    // Update tab buttons
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+
+    // Update tab panes
+    document.querySelectorAll('.tab-pane').forEach(pane => {
+        pane.classList.remove('active');
+    });
+    document.getElementById(`${tabName}Pane`).classList.add('active');
+
+    currentTab = tabName;
+
+    // Collapse any expanded cards when switching tabs
+    if (expandedCard) {
+        expandedCard.classList.remove('expanded');
+        expandedCard = null;
+    }
+
+    // Update content based on tab
+    if (tabName === 'favorites') {
+        renderFavorites();
+    } else if (tabName === 'bookmarks') {
+        renderBookmarks();
+    }
+
+    // Clear search when switching tabs
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput.value) {
+        searchInput.value = '';
+        clearSearch();
+    }
+}
+
 // ===== THEME MANAGEMENT =====
 function setTheme(theme) {
-    // Remove current theme class
     document.body.className = theme;
     currentTheme = theme;
 
-    // Save theme to localStorage
     try {
         localStorage.setItem('shortercat-theme', theme);
     } catch (e) {
         console.warn('Could not save theme to localStorage:', e);
     }
 
-    // Update button states
     const buttons = document.querySelectorAll('.theme-btn');
     buttons.forEach(btn => {
         btn.classList.remove('active');
     });
 
-    // Set active button
     const activeBtn = document.querySelector(`.theme-btn[data-theme="${theme}"]`);
     if (activeBtn) {
         activeBtn.classList.add('active');
     }
 
-    // Close menu after selection
     closeMenu();
 }
 
@@ -155,12 +255,84 @@ function closeMenu() {
     themeMenu.classList.remove('active');
 }
 
+// ===== FAVORITES MANAGEMENT =====
+function loadFavorites() {
+    try {
+        const saved = localStorage.getItem('shortercat-favorites');
+        favorites = saved ? JSON.parse(saved) : [];
+        updateFavoritesUI();
+    } catch (e) {
+        console.warn('Could not load favorites from localStorage:', e);
+        favorites = [];
+    }
+}
+
+function saveFavorites() {
+    try {
+        localStorage.setItem('shortercat-favorites', JSON.stringify(favorites));
+    } catch (e) {
+        console.warn('Could not save favorites to localStorage:', e);
+    }
+}
+
+function toggleFavorite(questionId) {
+    const index = favorites.findIndex(f => f.id === questionId);
+
+    if (index === -1) {
+        const questionData = catechismData.questions.find(q => q.id === questionId);
+        if (questionData) {
+            favorites.push({
+                id: questionId,
+                question: `Q${questionData.id}: ${questionData.question}`,
+                answer: `A: ${questionData.answer}`,
+                timestamp: Date.now()
+            });
+        }
+    } else {
+        favorites.splice(index, 1);
+    }
+
+    saveFavorites();
+    updateFavoritesUI();
+    updateCardButtons();
+}
+
+function updateFavoritesUI() {
+    const countElement = document.getElementById('favoritesCount');
+    const count = favorites.length;
+    countElement.textContent = count;
+    countElement.classList.toggle('visible', count > 0);
+}
+
+function renderFavorites() {
+    const container = document.getElementById('favoritesContainer');
+    const emptyState = document.getElementById('emptyFavorites');
+
+    if (favorites.length === 0) {
+        container.style.display = 'none';
+        emptyState.style.display = 'block';
+        return;
+    }
+
+    container.style.display = 'block';
+    emptyState.style.display = 'none';
+    container.innerHTML = '';
+
+    favorites.forEach(favoriteData => {
+        const questionData = catechismData.questions.find(q => q.id === favoriteData.id);
+        if (questionData) {
+            const questionElement = createQuestionElement(questionData);
+            container.appendChild(questionElement);
+        }
+    });
+}
+
 // ===== BOOKMARK MANAGEMENT =====
 function loadBookmarks() {
     try {
         const saved = localStorage.getItem('shortercat-bookmarks');
         bookmarks = saved ? JSON.parse(saved) : [];
-        updateBookmarkUI();
+        updateBookmarksUI();
     } catch (e) {
         console.warn('Could not load bookmarks from localStorage:', e);
         bookmarks = [];
@@ -179,122 +351,154 @@ function toggleBookmark(questionId) {
     const index = bookmarks.findIndex(b => b.id === questionId);
 
     if (index === -1) {
-        // Add bookmark - get data from JSON
         const questionData = catechismData.questions.find(q => q.id === questionId);
         if (questionData) {
             bookmarks.push({
                 id: questionId,
-                question: `Q. ${questionData.id}. ${questionData.question}`,
-                answer: `A. ${questionData.answer}`,
+                question: `Q${questionData.id}: ${questionData.question}`,
+                answer: `A: ${questionData.answer}`,
                 timestamp: Date.now()
             });
         }
     } else {
-        // Remove bookmark
         bookmarks.splice(index, 1);
     }
 
     saveBookmarks();
-    updateBookmarkUI();
+    updateBookmarksUI();
+    updateCardButtons();
 }
 
-function updateBookmarkUI() {
-    // Update bookmark count
-    const countElement = document.getElementById('bookmarkCount');
+function updateBookmarksUI() {
+    const countElement = document.getElementById('bookmarksCount');
     const count = bookmarks.length;
     countElement.textContent = count;
     countElement.classList.toggle('visible', count > 0);
-
-    // Update individual bookmark buttons
-    document.querySelectorAll('.qa-bookmark-btn').forEach(btn => {
-        const questionId = parseInt(btn.closest('.qa-item').dataset.questionId);
-        const isBookmarked = bookmarks.some(b => b.id === questionId);
-        btn.classList.toggle('bookmarked', isBookmarked);
-    });
-
-    // Update bookmark dropdown
-    updateBookmarkDropdown();
 }
 
-function updateBookmarkDropdown() {
-    const bookmarkList = document.getElementById('bookmarkList');
+function renderBookmarks() {
+    const container = document.getElementById('bookmarksContainer');
+    const emptyState = document.getElementById('emptyBookmarks');
 
     if (bookmarks.length === 0) {
-        bookmarkList.innerHTML = '<div class="no-bookmarks">No bookmarks yet. Click the bookmark icon on any question to save it!</div>';
+        container.style.display = 'none';
+        emptyState.style.display = 'block';
         return;
     }
 
-    // Show only the 10 most recent bookmarks
-    const recentBookmarks = bookmarks
-        .sort((a, b) => b.timestamp - a.timestamp)
-        .slice(0, 10);
+    container.style.display = 'block';
+    emptyState.style.display = 'none';
+    container.innerHTML = '';
 
-    bookmarkList.innerHTML = recentBookmarks.map((bookmark, index) => {
-        const colorClass = `ribbon-color-${(index % 10) + 1}`;
-        return `
-            <div class="bookmark-item ${colorClass}" onclick="scrollToQuestion(${bookmark.id})">
-                <svg class="bookmark-ribbon-small ${colorClass}" viewBox="0 0 24 24">
-                    <path d="M17,3H7A2,2 0 0,0 5,5V21L12,18L19,21V5C19,4.89 18.89,4 17,3Z" />
-                </svg>
-                <div class="bookmark-item-text">
-                    ${bookmark.question}
-                </div>
-                <button class="bookmark-remove" onclick="event.stopPropagation(); removeBookmark(${bookmark.id})" title="Remove bookmark">×</button>
-            </div>
-        `;
-    }).join('');
+    bookmarks.forEach(bookmarkData => {
+        const questionData = catechismData.questions.find(q => q.id === bookmarkData.id);
+        if (questionData) {
+            const questionElement = createQuestionElement(questionData);
+            container.appendChild(questionElement);
+        }
+    });
 }
 
-function scrollToQuestion(questionId) {
-    const questionElement = document.querySelector(`[data-question-id="${questionId}"]`);
-    if (questionElement) {
-        questionElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-
-        // Brief highlight effect
-        questionElement.style.transform = 'scale(1.02)';
-        setTimeout(() => {
-            questionElement.style.transform = '';
-        }, 300);
-    }
-
-    // Close dropdown
-    toggleBookmarkDropdown();
-}
-
-function removeBookmark(questionId) {
-    const index = bookmarks.findIndex(b => b.id === questionId);
-    if (index !== -1) {
-        bookmarks.splice(index, 1);
-        saveBookmarks();
-        updateBookmarkUI();
+// ===== NOTES MANAGEMENT =====
+function loadNotes() {
+    try {
+        const saved = localStorage.getItem('shortercat-notes');
+        notes = saved ? JSON.parse(saved) : {};
+    } catch (e) {
+        console.warn('Could not load notes from localStorage:', e);
+        notes = {};
     }
 }
 
-function toggleBookmarkDropdown() {
-    const dropdown = document.getElementById('bookmarkDropdown');
-    dropdown.classList.toggle('active');
+function saveNotes() {
+    try {
+        localStorage.setItem('shortercat-notes', JSON.stringify(notes));
+    } catch (e) {
+        console.warn('Could not save notes to localStorage:', e);
+    }
+}
+
+function openNotesModal(questionId) {
+    const questionData = catechismData.questions.find(q => q.id === questionId);
+    if (!questionData) return;
+
+    const modal = document.getElementById('notesModal');
+    const overlay = document.getElementById('notesModalOverlay');
+    const title = document.getElementById('notesModalTitle');
+    const questionDiv = document.getElementById('notesModalQuestion');
+    const textarea = document.getElementById('notesTextarea');
+
+    title.textContent = `Note for Q${questionData.id}`;
+    questionDiv.innerHTML = `
+        <strong>Q${questionData.id}: ${questionData.question}</strong><br>
+        A: ${questionData.answer}
+    `;
+
+    textarea.value = notes[questionId] || '';
+    textarea.setAttribute('data-question-id', questionId);
+
+    overlay.classList.add('active');
+    setTimeout(() => textarea.focus(), 100);
+}
+
+function closeNotesModal() {
+    const overlay = document.getElementById('notesModalOverlay');
+    overlay.classList.remove('active');
+}
+
+function saveNote() {
+    const textarea = document.getElementById('notesTextarea');
+    const questionId = parseInt(textarea.getAttribute('data-question-id'));
+    const noteText = textarea.value.trim();
+
+    if (noteText) {
+        notes[questionId] = noteText;
+    } else {
+        delete notes[questionId];
+    }
+
+    saveNotes();
+    updateCardButtons();
+    closeNotesModal();
+}
+
+// ===== EMAIL SHARING =====
+function shareViaEmail(questionId) {
+    const questionData = catechismData.questions.find(q => q.id === questionId);
+    if (!questionData) return;
+
+    const userNote = notes[questionId] || '';
+    const subject = encodeURIComponent(formatEmailSubject(questionData));
+    const body = encodeURIComponent(formatEmailBody(questionData, userNote));
+
+    const mailtoUrl = `mailto:?subject=${subject}&body=${body}`;
+    window.location.href = mailtoUrl;
+}
+
+// ===== UI UPDATES =====
+function updateCardButtons() {
+    document.querySelectorAll('.qa-item').forEach(card => {
+        const questionId = parseInt(card.dataset.questionId);
+
+        const favoriteBtn = card.querySelector('.favorite-btn');
+        const bookmarkBtn = card.querySelector('.bookmark-btn');
+        const noteBtn = card.querySelector('.note-btn');
+
+        const isFavorited = favorites.some(f => f.id === questionId);
+        const isBookmarked = bookmarks.some(b => b.id === questionId);
+        const hasNote = notes[questionId];
+
+        favoriteBtn.classList.toggle('active', isFavorited);
+        bookmarkBtn.classList.toggle('active', isBookmarked);
+        noteBtn.classList.toggle('active', !!hasNote);
+    });
 }
 
 // ===== SCROLL TO TOP FUNCTIONALITY =====
 function updateScrollToTop() {
     const scrollToTopBtn = document.getElementById('scrollToTop');
-    const questionsContainer = document.getElementById('questionsContainer');
-    const questions = questionsContainer.querySelectorAll('.qa-item');
-
-    if (questions.length >= 15) {
-        // Calculate approximate position of 15th question
-        const fifteenthQuestion = questions[14]; // 0-indexed
-        const questionRect = fifteenthQuestion.getBoundingClientRect();
-        const windowTop = window.pageYOffset || document.documentElement.scrollTop;
-        const questionTop = questionRect.top + windowTop;
-
-        // Show button when scrolled past 15th question
-        if (window.scrollY > questionTop - window.innerHeight) {
-            scrollToTopBtn.classList.add('visible');
-        } else {
-            scrollToTopBtn.classList.remove('visible');
-        }
-    }
+    const isVisible = window.scrollY > 300;
+    scrollToTopBtn.classList.toggle('visible', isVisible);
 }
 
 function scrollToTop() {
@@ -306,7 +510,6 @@ function scrollToTop() {
 
 // ===== SEARCH FUNCTIONALITY =====
 function initializeSearch() {
-    // Collect all questions and answers from JSON data
     const qaItems = document.querySelectorAll('.qa-item');
     allQuestions = Array.from(qaItems).map((item, index) => {
         const questionData = catechismData.questions[index];
@@ -322,13 +525,31 @@ function initializeSearch() {
 
 function performSearch(query) {
     const searchResults = document.getElementById('searchResults');
+    let questionsToSearch = [];
+
+    // Determine which questions to search based on current tab
+    if (currentTab === 'home') {
+        questionsToSearch = allQuestions;
+    } else if (currentTab === 'favorites') {
+        const favoriteIds = favorites.map(f => f.id);
+        questionsToSearch = allQuestions.filter(q => favoriteIds.includes(q.id));
+    } else if (currentTab === 'bookmarks') {
+        const bookmarkIds = bookmarks.map(b => b.id);
+        questionsToSearch = allQuestions.filter(q => bookmarkIds.includes(q.id));
+    }
 
     if (!query.trim()) {
-        // Show all questions and remove all highlights
-        allQuestions.forEach(item => {
-            item.element.style.display = 'block';
-            removeHighlights(item.element);
-        });
+        // Show all questions for current tab and remove highlights
+        if (currentTab === 'home') {
+            allQuestions.forEach(item => {
+                item.element.style.display = 'block';
+                removeHighlights(item.element);
+            });
+        } else {
+            // For favorites/bookmarks tabs, re-render the content
+            if (currentTab === 'favorites') renderFavorites();
+            if (currentTab === 'bookmarks') renderBookmarks();
+        }
         searchResults.textContent = '';
         document.getElementById('clearSearch').classList.remove('visible');
         return;
@@ -339,20 +560,43 @@ function performSearch(query) {
     const lowerQuery = query.toLowerCase();
     let visibleCount = 0;
 
-    allQuestions.forEach(item => {
-        const questionMatch = item.question.toLowerCase().includes(lowerQuery);
-        const answerMatch = item.answer.toLowerCase().includes(lowerQuery);
+    if (currentTab === 'home') {
+        allQuestions.forEach(item => {
+            const questionMatch = item.question.toLowerCase().includes(lowerQuery);
+            const answerMatch = item.answer.toLowerCase().includes(lowerQuery);
 
-        if (questionMatch || answerMatch) {
-            item.element.style.display = 'block';
-            visibleCount++;
+            if (questionMatch || answerMatch) {
+                item.element.style.display = 'block';
+                visibleCount++;
+                highlightText(item.element, query);
+            } else {
+                item.element.style.display = 'none';
+            }
+        });
+    } else {
+        // For favorites/bookmarks, filter and re-render
+        const filteredQuestions = questionsToSearch.filter(item => {
+            const questionMatch = item.question.toLowerCase().includes(lowerQuery);
+            const answerMatch = item.answer.toLowerCase().includes(lowerQuery);
+            return questionMatch || answerMatch;
+        });
 
-            // Highlight matching text
-            highlightText(item.element, query);
-        } else {
-            item.element.style.display = 'none';
-        }
-    });
+        visibleCount = filteredQuestions.length;
+
+        // Re-render filtered results
+        const container = currentTab === 'favorites' ?
+            document.getElementById('favoritesContainer') :
+            document.getElementById('bookmarksContainer');
+
+        container.innerHTML = '';
+
+        filteredQuestions.forEach(item => {
+            const questionData = catechismData.questions.find(q => q.id === item.id);
+            const questionElement = createQuestionElement(questionData);
+            highlightText(questionElement, query);
+            container.appendChild(questionElement);
+        });
+    }
 
     // Update search results
     if (visibleCount === 0) {
@@ -368,12 +612,10 @@ function highlightText(element, query) {
     const question = element.querySelector('.question');
     const answer = element.querySelector('.answer');
 
-    // Remove existing highlights
     removeHighlights(element);
 
     if (query.trim()) {
         const regex = new RegExp(`(${escapeRegex(query)})`, 'gi');
-
         question.innerHTML = question.textContent.replace(regex, '<mark style="background-color: yellow; color: black;">$1</mark>');
         answer.innerHTML = answer.textContent.replace(regex, '<mark style="background-color: yellow; color: black;">$1</mark>');
     }
@@ -383,7 +625,6 @@ function removeHighlights(element) {
     const question = element.querySelector('.question');
     const answer = element.querySelector('.answer');
 
-    // Reset to plain text, removing any HTML tags including highlights
     question.innerHTML = question.textContent;
     answer.innerHTML = answer.textContent;
 }
@@ -397,6 +638,14 @@ function clearSearch() {
 
 // ===== EVENT LISTENERS =====
 function setupEventListeners() {
+    // Tab navigation
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const tabName = btn.getAttribute('data-tab');
+            switchTab(tabName);
+        });
+    });
+
     // Hamburger menu
     document.getElementById('hamburger').addEventListener('click', toggleMenu);
     document.getElementById('menuOverlay').addEventListener('click', closeMenu);
@@ -409,22 +658,9 @@ function setupEventListeners() {
         });
     });
 
-    // Bookmark functionality
-    document.getElementById('bookmarkMainBtn').addEventListener('click', toggleBookmarkDropdown);
-
     // Scroll to top functionality
     document.getElementById('scrollToTop').addEventListener('click', scrollToTop);
     window.addEventListener('scroll', debounce(updateScrollToTop, 100));
-
-    // Close bookmark dropdown when clicking outside
-    document.addEventListener('click', function (e) {
-        const dropdown = document.getElementById('bookmarkDropdown');
-        const bookmarkBtn = document.getElementById('bookmarkMainBtn');
-
-        if (!dropdown.contains(e.target) && !bookmarkBtn.contains(e.target)) {
-            dropdown.classList.remove('active');
-        }
-    });
 
     // Search functionality
     const searchInput = document.getElementById('searchInput');
@@ -439,12 +675,36 @@ function setupEventListeners() {
     // Retry button
     document.getElementById('retryBtn').addEventListener('click', loadCatechism);
 
+    // Notes modal
+    document.getElementById('notesModalClose').addEventListener('click', closeNotesModal);
+    document.getElementById('notesModalCancel').addEventListener('click', closeNotesModal);
+    document.getElementById('notesModalSave').addEventListener('click', saveNote);
+
+    // Close modal on overlay click
+    document.getElementById('notesModalOverlay').addEventListener('click', function (e) {
+        if (e.target === this) {
+            closeNotesModal();
+        }
+    });
+
+    // Close expanded cards when clicking outside
+    document.addEventListener('click', function (e) {
+        if (!e.target.closest('.qa-item') && expandedCard) {
+            expandedCard.classList.remove('expanded');
+            expandedCard = null;
+        }
+    });
+
     // Keyboard shortcuts
     document.addEventListener('keydown', function (e) {
-        // Escape to close menus
+        // Escape to close menus and modals
         if (e.key === 'Escape') {
             closeMenu();
-            document.getElementById('bookmarkDropdown').classList.remove('active');
+            closeNotesModal();
+            if (expandedCard) {
+                expandedCard.classList.remove('expanded');
+                expandedCard = null;
+            }
         }
 
         // Ctrl/Cmd + F to focus search
@@ -453,8 +713,26 @@ function setupEventListeners() {
             searchInput.focus();
         }
 
-        // Theme shortcuts
+        // Tab shortcuts
         if (e.ctrlKey || e.metaKey) {
+            switch (e.key) {
+                case '1':
+                    e.preventDefault();
+                    switchTab('home');
+                    break;
+                case '2':
+                    e.preventDefault();
+                    switchTab('favorites');
+                    break;
+                case '3':
+                    e.preventDefault();
+                    switchTab('bookmarks');
+                    break;
+            }
+        }
+
+        // Theme shortcuts
+        if (e.altKey) {
             switch (e.key) {
                 case '1':
                     e.preventDefault();
@@ -479,9 +757,11 @@ function setupEventListeners() {
 
 // ===== INITIALIZATION =====
 function initializeApp() {
-    // Restore theme and bookmarks
+    // Load saved data
     loadSavedTheme();
+    loadFavorites();
     loadBookmarks();
+    loadNotes();
 
     // Load catechism data
     loadCatechism();
@@ -497,7 +777,8 @@ function initializeApp() {
 document.addEventListener('DOMContentLoaded', initializeApp);
 
 // ===== GLOBAL FUNCTIONS (for onclick handlers) =====
-// These functions need to be global for the onclick handlers in the HTML
+window.toggleCardExpansion = toggleCardExpansion;
+window.toggleFavorite = toggleFavorite;
 window.toggleBookmark = toggleBookmark;
-window.scrollToQuestion = scrollToQuestion;
-window.removeBookmark = removeBookmark;
+window.openNotesModal = openNotesModal;
+window.shareViaEmail = shareViaEmail;

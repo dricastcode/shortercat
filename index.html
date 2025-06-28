@@ -29,40 +29,41 @@
             </div>
         </nav>
 
+        <!-- Tab Navigation -->
+        <div class="tab-navigation">
+            <button class="tab-btn active" data-tab="home" id="homeTab">
+                <svg class="tab-icon" viewBox="0 0 24 24">
+                    <path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z" />
+                </svg>
+                <span>Home</span>
+            </button>
+            <button class="tab-btn" data-tab="favorites" id="favoritesTab">
+                <svg class="tab-icon" viewBox="0 0 24 24">
+                    <path
+                        d="M12,21.35L10.55,20.03C5.4,15.36 2,12.27 2,8.5 2,5.41 4.42,3 7.5,3C9.24,3 10.91,3.81 12,5.08C13.09,3.81 14.76,3 16.5,3C19.58,3 22,5.41 22,8.5C22,12.27 18.6,15.36 13.45,20.03L12,21.35Z" />
+                </svg>
+                <span>Favorites</span>
+                <span class="favorites-count" id="favoritesCount">0</span>
+            </button>
+            <button class="tab-btn" data-tab="bookmarks" id="bookmarksTab">
+                <svg class="tab-icon" viewBox="0 0 24 24">
+                    <path d="M17,3H7A2,2 0 0,0 5,5V21L12,18L19,21V5C19,4.89 18.89,4 17,3Z" />
+                </svg>
+                <span>Bookmarks</span>
+                <span class="bookmarks-count" id="bookmarksCount">0</span>
+            </button>
+        </div>
+
         <!-- Search Section -->
         <div class="search-section sticky-search">
-            <div class="search-bookmark-container">
-                <div class="search-container">
-                    <input type="text" class="search-box" placeholder="Search questions..." id="searchInput">
-                    <button class="clear-search" id="clearSearch">×</button>
-                    <svg class="search-icon" viewBox="0 0 24 24">
-                        <path
-                            d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
-                    </svg>
-                </div>
-
-                <!-- Bookmark Button -->
-                <div class="bookmark-section">
-                    <button class="bookmark-main-btn" id="bookmarkMainBtn" title="View Bookmarks">
-                        <svg class="bookmark-ribbon" viewBox="0 0 24 24">
-                            <path d="M17,3H7A2,2 0 0,0 5,5V21L12,18L19,21V5C19,4.89 18.89,4 17,3Z" />
-                        </svg>
-                        <span class="bookmark-count" id="bookmarkCount">0</span>
-                    </button>
-
-                    <!-- Bookmark Dropdown -->
-                    <div class="bookmark-dropdown" id="bookmarkDropdown">
-                        <div class="bookmark-dropdown-header">
-                            <h3>Bookmarked Questions</h3>
-                        </div>
-                        <div class="bookmark-list" id="bookmarkList">
-                            <div class="no-bookmarks">No bookmarks yet. Click the bookmark icon on any question to save
-                                it!</div>
-                        </div>
-                    </div>
-                </div>
+            <div class="search-container">
+                <input type="text" class="search-box" placeholder="Search questions..." id="searchInput">
+                <button class="clear-search" id="clearSearch">×</button>
+                <svg class="search-icon" viewBox="0 0 24 24">
+                    <path
+                        d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
+                </svg>
             </div>
-
             <div class="search-results" id="searchResults"></div>
         </div>
 
@@ -78,22 +79,60 @@
             </div>
         </div>
 
-        <!-- Main Content -->
-        <div class="catechism">
-            <div class="loading-state" id="loadingState">
-                <div class="loading-text">Loading catechism questions...</div>
-            </div>
+        <!-- Tab Content -->
+        <div class="tab-content">
+            <!-- Home Tab -->
+            <div class="tab-pane active" id="homePane">
+                <div class="catechism">
+                    <div class="loading-state" id="loadingState">
+                        <div class="loading-text">Loading catechism questions...</div>
+                    </div>
 
-            <div class="error-state" id="errorState" style="display: none;">
-                <div class="error-text">
-                    <h3>Unable to load questions</h3>
-                    <p>Please check your connection and try refreshing the page.</p>
-                    <button class="retry-btn" id="retryBtn">Try Again</button>
+                    <div class="error-state" id="errorState" style="display: none;">
+                        <div class="error-text">
+                            <h3>Unable to load questions</h3>
+                            <p>Please check your connection and try refreshing the page.</p>
+                            <button class="retry-btn" id="retryBtn">Try Again</button>
+                        </div>
+                    </div>
+
+                    <div class="questions-container" id="questionsContainer">
+                        <!-- Questions will be loaded here dynamically -->
+                    </div>
                 </div>
             </div>
 
-            <div class="questions-container" id="questionsContainer">
-                <!-- Questions will be loaded here dynamically -->
+            <!-- Favorites Tab -->
+            <div class="tab-pane" id="favoritesPane">
+                <div class="favorites-content">
+                    <div class="empty-state" id="emptyFavorites">
+                        <svg class="empty-icon" viewBox="0 0 24 24">
+                            <path
+                                d="M12,21.35L10.55,20.03C5.4,15.36 2,12.27 2,8.5 2,5.41 4.42,3 7.5,3C9.24,3 10.91,3.81 12,5.08C13.09,3.81 14.76,3 16.5,3C19.58,3 22,5.41 22,8.5C22,12.27 18.6,15.36 13.45,20.03L12,21.35Z" />
+                        </svg>
+                        <h3>No Favorites Yet</h3>
+                        <p>Click the heart icon on any question to add it to your favorites!</p>
+                    </div>
+                    <div class="favorites-container" id="favoritesContainer">
+                        <!-- Favorite questions will appear here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bookmarks Tab -->
+            <div class="tab-pane" id="bookmarksPane">
+                <div class="bookmarks-content">
+                    <div class="empty-state" id="emptyBookmarks">
+                        <svg class="empty-icon" viewBox="0 0 24 24">
+                            <path d="M17,3H7A2,2 0 0,0 5,5V21L12,18L19,21V5C19,4.89 18.89,4 17,3Z" />
+                        </svg>
+                        <h3>No Bookmarks Yet</h3>
+                        <p>Click the bookmark icon on any question to save your reading progress!</p>
+                    </div>
+                    <div class="bookmarks-container" id="bookmarksContainer">
+                        <!-- Bookmarked questions will appear here -->
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -103,6 +142,27 @@
                 <path d="M7.41,15.41L12,10.83L16.59,15.41L18,14L12,8L6,14L7.41,15.41Z" />
             </svg>
         </button>
+    </div>
+
+    <!-- Notes Modal -->
+    <div class="modal-overlay" id="notesModalOverlay">
+        <div class="modal" id="notesModal">
+            <div class="modal-header">
+                <h3 id="notesModalTitle">Add Note</h3>
+                <button class="modal-close" id="notesModalClose">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-question" id="notesModalQuestion">
+                    <!-- Question will be displayed here -->
+                </div>
+                <textarea class="notes-textarea" id="notesTextarea"
+                    placeholder="Write your notes about this question..." rows="6"></textarea>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" id="notesModalCancel">Cancel</button>
+                <button class="btn-primary" id="notesModalSave">Save Note</button>
+            </div>
+        </div>
     </div>
 
     <!-- JavaScript -->
