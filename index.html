@@ -70,6 +70,16 @@
         <!-- Menu Overlay and Theme Menu -->
         <div class="menu-overlay" id="menuOverlay"></div>
         <div class="theme-menu" id="themeMenu">
+            <div class="menu-section">
+                <button class="menu-item-btn" id="aboutBtn">
+                    <svg class="menu-icon" viewBox="0 0 24 24">
+                        <path
+                            d="M11,9H13V7H11M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M11,17H13V11H11V17Z" />
+                    </svg>
+                    About
+                </button>
+            </div>
+
             <h2>Choose Your Theme</h2>
             <div class="theme-buttons">
                 <button class="theme-btn light-btn active" data-theme="light" data-theme-name="Light"></button>
@@ -161,6 +171,42 @@
             <div class="modal-footer">
                 <button class="btn-secondary" id="notesModalCancel">Cancel</button>
                 <button class="btn-primary" id="notesModalSave">Save Note</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- About Modal -->
+    <div class="modal-overlay" id="aboutModalOverlay">
+        <div class="modal" id="aboutModal">
+            <div class="modal-header">
+                <h3>About Children's Catechism</h3>
+                <button class="modal-close" id="aboutModalClose">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="about-content">
+                    <p>This app is designed to help families and children learn and study the Children's Shorter
+                        Catechism through interactive questions, personal notes, and study tools.</p>
+
+                    <div class="about-features">
+                        <h4>Features:</h4>
+                        <ul>
+                            <li>✨ Interactive question cards</li>
+                            <li>❤️ Favorite questions for quick access</li>
+                            <li>🔖 Bookmark questions for reading progress</li>
+                            <li>📝 Personal notes for deeper study</li>
+                            <li>📋 Copy questions to share easily</li>
+                            <li>🔍 Search across all questions</li>
+                            <li>🎨 Four beautiful themes</li>
+                        </ul>
+                    </div>
+
+                    <div class="about-source">
+                        <p><small>Based on the Westminster Shorter Catechism for Children</small></p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-primary" id="aboutModalOk">Got it!</button>
             </div>
         </div>
     </div>

@@ -442,6 +442,18 @@ function closeNotesModal() {
     overlay.classList.remove('active');
 }
 
+// ===== ABOUT MODAL =====
+function openAboutModal() {
+    const overlay = document.getElementById('aboutModalOverlay');
+    overlay.classList.add('active');
+    closeMenu(); // Close hamburger menu when opening about
+}
+
+function closeAboutModal() {
+    const overlay = document.getElementById('aboutModalOverlay');
+    overlay.classList.remove('active');
+}
+
 function saveNote() {
     const textarea = document.getElementById('notesTextarea');
     const questionId = parseInt(textarea.getAttribute('data-question-id'));
@@ -719,10 +731,21 @@ function setupEventListeners() {
     document.getElementById('notesModalCancel').addEventListener('click', closeNotesModal);
     document.getElementById('notesModalSave').addEventListener('click', saveNote);
 
-    // Close modal on overlay click
+    // About modal
+    document.getElementById('aboutBtn').addEventListener('click', openAboutModal);
+    document.getElementById('aboutModalClose').addEventListener('click', closeAboutModal);
+    document.getElementById('aboutModalOk').addEventListener('click', closeAboutModal);
+
+    // Close modals on overlay click
     document.getElementById('notesModalOverlay').addEventListener('click', function (e) {
         if (e.target === this) {
             closeNotesModal();
+        }
+    });
+
+    document.getElementById('aboutModalOverlay').addEventListener('click', function (e) {
+        if (e.target === this) {
+            closeAboutModal();
         }
     });
 
@@ -740,6 +763,7 @@ function setupEventListeners() {
         if (e.key === 'Escape') {
             closeMenu();
             closeNotesModal();
+            closeAboutModal();
             if (expandedCard) {
                 expandedCard.classList.remove('expanded');
                 expandedCard = null;
@@ -821,3 +845,5 @@ window.toggleFavorite = toggleFavorite;
 window.toggleBookmark = toggleBookmark;
 window.openNotesModal = openNotesModal;
 window.copyToClipboard = copyToClipboard;
+window.openAboutModal = openAboutModal;
+window.closeAboutModal = closeAboutModal;
