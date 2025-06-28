@@ -7,6 +7,19 @@ let bookmarks = [];
 let notes = {};
 let catechismData = null;
 let expandedCard = null;
+let activeCategories = new Set(); // For category filtering
+
+// ===== CATEGORY COLOR MAPPING =====
+const categoryColors = {
+    "God's Nature": "#6366f1",        // Indigo - Divine
+    "Scripture": "#f59e0b",           // Amber - Wisdom  
+    "Creation & Fall": "#10b981",     // Emerald - Earth/Nature
+    "Salvation & Christ": "#ef4444",  // Red - Sacrifice/Love
+    "Ten Commandments": "#8b5cf6",    // Violet - Authority/Law
+    "Prayer": "#06b6d4",              // Cyan - Peace/Communication
+    "Sacraments": "#059669",          // Emerald Dark - Sacred
+    "Last Things": "#ea580c"          // Orange Dark - Eternal
+};
 
 // ===== UTILITY FUNCTIONS =====
 function escapeRegex(string) {
@@ -96,10 +109,15 @@ function createQuestionElement(questionData) {
     const qaItem = document.createElement('div');
     qaItem.className = 'qa-item';
     qaItem.setAttribute('data-question-id', questionData.id);
+    qaItem.setAttribute('data-category', questionData.category);
 
     const isFavorited = favorites.some(f => f.id === questionData.id);
     const isBookmarked = bookmarks.some(b => b.id === questionData.id);
     const hasNote = notes[questionData.id];
+
+    // Set category color for left border
+    const categoryColor = categoryColors[questionData.category] || '#4a90e2';
+    qaItem.style.borderLeftColor = categoryColor;
 
     qaItem.innerHTML = `
         <div class="qa-content" onclick="toggleCardExpansion(${questionData.id})">
@@ -180,11 +198,13 @@ function switchTab(tabName) {
         expandedCard = null;
     }
 
-    // Update content based on tab
+    // Update content based on tab and apply category filter
     if (tabName === 'favorites') {
         renderFavorites();
     } else if (tabName === 'bookmarks') {
         renderBookmarks();
+    } else if (tabName === 'home') {
+        filterQuestionsByCategory();
     }
 
     // Clear search when switching tabs
@@ -304,9 +324,20 @@ function renderFavorites() {
     const container = document.getElementById('favoritesContainer');
     const emptyState = document.getElementById('emptyFavorites');
 
-    if (favorites.length === 0) {
+    // Filter favorites by active categories
+    const filteredFavorites = favorites.filter(favoriteData => {
+        const questionData = catechismData.questions.find(q => q.id === favoriteData.id);
+        return activeCategories.size === 0 || activeCategories.has(questionData.category);
+    });
+
+    if (filteredFavorites.length === 0) {
         container.style.display = 'none';
         emptyState.style.display = 'block';
+        // Update empty state message based on filter
+        const emptyMessage = activeCategories.size === 0 ?
+            'No favorites yet. Click the heart icon on any question to add it to your favorites!' :
+            'No favorites in the selected categories. Try selecting different categories or add more favorites!';
+        emptyState.querySelector('p').textContent = emptyMessage;
         return;
     }
 
@@ -314,7 +345,7 @@ function renderFavorites() {
     emptyState.style.display = 'none';
     container.innerHTML = '';
 
-    favorites.forEach(favoriteData => {
+    filteredFavorites.forEach(favoriteData => {
         const questionData = catechismData.questions.find(q => q.id === favoriteData.id);
         if (questionData) {
             const questionElement = createQuestionElement(questionData);
@@ -376,9 +407,20 @@ function renderBookmarks() {
     const container = document.getElementById('bookmarksContainer');
     const emptyState = document.getElementById('emptyBookmarks');
 
-    if (bookmarks.length === 0) {
+    // Filter bookmarks by active categories
+    const filteredBookmarks = bookmarks.filter(bookmarkData => {
+        const questionData = catechismData.questions.find(q => q.id === bookmarkData.id);
+        return activeCategories.size === 0 || activeCategories.has(questionData.category);
+    });
+
+    if (filteredBookmarks.length === 0) {
         container.style.display = 'none';
         emptyState.style.display = 'block';
+        // Update empty state message based on filter
+        const emptyMessage = activeCategories.size === 0 ?
+            'No bookmarks yet. Click the bookmark icon on any question to save your reading progress!' :
+            'No bookmarks in the selected categories. Try selecting different categories or add more bookmarks!';
+        emptyState.querySelector('p').textContent = emptyMessage;
         return;
     }
 
@@ -386,7 +428,7 @@ function renderBookmarks() {
     emptyState.style.display = 'none';
     container.innerHTML = '';
 
-    bookmarks.forEach(bookmarkData => {
+    filteredBookmarks.forEach(bookmarkData => {
         const questionData = catechismData.questions.find(q => q.id === bookmarkData.id);
         if (questionData) {
             const questionElement = createQuestionElement(questionData);
@@ -452,6 +494,104 @@ function openAboutModal() {
 function closeAboutModal() {
     const overlay = document.getElementById('aboutModalOverlay');
     overlay.classList.remove('active');
+}
+
+// ===== CATEGORIES MODAL =====
+function openCategoriesModal() {
+    const overlay = document.getElementById('categoriesModalOverlay');
+    populateCategoriesList();
+    overlay.classList.add('active');
+    closeMenu(); // Close hamburger menu when opening categories
+}
+
+function closeCategoriesModal() {
+    const overlay = document.getElementById('categoriesModalOverlay');
+    overlay.classList.remove('active');
+}
+
+function populateCategoriesList() {
+    const categoriesList = document.getElementById('categoriesList');
+    const categories = catechismData ? Object.keys(categoryColors) : [];
+
+    categoriesList.innerHTML = '';
+
+    categories.forEach(category => {
+        const count = catechismData.questions.filter(q => q.category === category).length;
+        const isActive = activeCategories.size === 0 || activeCategories.has(category);
+        const color = categoryColors[category];
+
+        const categoryItem = document.createElement('div');
+        categoryItem.className = `category-item ${isActive ? 'active' : ''}`;
+        categoryItem.style.setProperty('--category-color', color);
+        categoryItem.setAttribute('data-category', category);
+
+        categoryItem.innerHTML = `
+            <div class="category-checkbox ${isActive ? 'checked' : ''}" style="border-color: ${color}"></div>
+            <div class="category-color-indicator" style="background-color: ${color}"></div>
+            <div class="category-details">
+                <div class="category-name">${category}</div>
+                <div class="category-count">${count} questions</div>
+            </div>
+        `;
+
+        categoryItem.addEventListener('click', () => toggleCategory(category));
+        categoriesList.appendChild(categoryItem);
+    });
+}
+
+function toggleCategory(category) {
+    const categoryItem = document.querySelector(`[data-category="${category}"]`);
+    const checkbox = categoryItem.querySelector('.category-checkbox');
+
+    if (activeCategories.has(category)) {
+        activeCategories.delete(category);
+        categoryItem.classList.remove('active');
+        checkbox.classList.remove('checked');
+    } else {
+        activeCategories.add(category);
+        categoryItem.classList.add('active');
+        checkbox.classList.add('checked');
+    }
+}
+
+function selectAllCategories() {
+    const categories = Object.keys(categoryColors);
+    activeCategories.clear();
+    categories.forEach(category => activeCategories.add(category));
+    populateCategoriesList();
+}
+
+function applyCategoryFilter() {
+    // If no categories selected, show all
+    if (activeCategories.size === 0) {
+        Object.keys(categoryColors).forEach(category => activeCategories.add(category));
+    }
+
+    // Apply filter to current view
+    filterQuestionsByCategory();
+    closeCategoriesModal();
+}
+
+function filterQuestionsByCategory() {
+    if (currentTab === 'home') {
+        // Filter home questions
+        allQuestions.forEach(item => {
+            const questionData = catechismData.questions.find(q => q.id === item.id);
+            const shouldShow = activeCategories.size === 0 ||
+                activeCategories.has(questionData.category);
+            item.element.style.display = shouldShow ? 'block' : 'none';
+        });
+    } else if (currentTab === 'favorites') {
+        renderFavorites();
+    } else if (currentTab === 'bookmarks') {
+        renderBookmarks();
+    }
+
+    // Update search if there's an active search
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput.value.trim()) {
+        performSearch(searchInput.value);
+    }
 }
 
 function saveNote() {
@@ -578,24 +718,32 @@ function performSearch(query) {
     const searchResults = document.getElementById('searchResults');
     let questionsToSearch = [];
 
-    // Determine which questions to search based on current tab
+    // Determine which questions to search based on current tab and category filter
     if (currentTab === 'home') {
-        questionsToSearch = allQuestions;
+        questionsToSearch = allQuestions.filter(q => {
+            const questionData = catechismData.questions.find(qd => qd.id === q.id);
+            return activeCategories.size === 0 || activeCategories.has(questionData.category);
+        });
     } else if (currentTab === 'favorites') {
         const favoriteIds = favorites.map(f => f.id);
-        questionsToSearch = allQuestions.filter(q => favoriteIds.includes(q.id));
+        questionsToSearch = allQuestions.filter(q => {
+            const questionData = catechismData.questions.find(qd => qd.id === q.id);
+            return favoriteIds.includes(q.id) &&
+                (activeCategories.size === 0 || activeCategories.has(questionData.category));
+        });
     } else if (currentTab === 'bookmarks') {
         const bookmarkIds = bookmarks.map(b => b.id);
-        questionsToSearch = allQuestions.filter(q => bookmarkIds.includes(q.id));
+        questionsToSearch = allQuestions.filter(q => {
+            const questionData = catechismData.questions.find(qd => qd.id === q.id);
+            return bookmarkIds.includes(q.id) &&
+                (activeCategories.size === 0 || activeCategories.has(questionData.category));
+        });
     }
 
     if (!query.trim()) {
-        // Show all questions for current tab and remove highlights
+        // Show questions based on current tab and category filter
         if (currentTab === 'home') {
-            allQuestions.forEach(item => {
-                item.element.style.display = 'block';
-                removeHighlights(item.element);
-            });
+            filterQuestionsByCategory();
         } else {
             // For favorites/bookmarks tabs, re-render the content
             if (currentTab === 'favorites') renderFavorites();
@@ -613,10 +761,12 @@ function performSearch(query) {
 
     if (currentTab === 'home') {
         allQuestions.forEach(item => {
+            const questionData = catechismData.questions.find(q => q.id === item.id);
             const questionMatch = item.question.toLowerCase().includes(lowerQuery);
             const answerMatch = item.answer.toLowerCase().includes(lowerQuery);
+            const inActiveCategory = activeCategories.size === 0 || activeCategories.has(questionData.category);
 
-            if (questionMatch || answerMatch) {
+            if ((questionMatch || answerMatch) && inActiveCategory) {
                 item.element.style.display = 'block';
                 visibleCount++;
                 highlightText(item.element, query);
@@ -736,6 +886,12 @@ function setupEventListeners() {
     document.getElementById('aboutModalClose').addEventListener('click', closeAboutModal);
     document.getElementById('aboutModalOk').addEventListener('click', closeAboutModal);
 
+    // Categories modal
+    document.getElementById('categoriesBtn').addEventListener('click', openCategoriesModal);
+    document.getElementById('categoriesModalClose').addEventListener('click', closeCategoriesModal);
+    document.getElementById('categoriesSelectAll').addEventListener('click', selectAllCategories);
+    document.getElementById('categoriesApply').addEventListener('click', applyCategoryFilter);
+
     // Close modals on overlay click
     document.getElementById('notesModalOverlay').addEventListener('click', function (e) {
         if (e.target === this) {
@@ -746,6 +902,12 @@ function setupEventListeners() {
     document.getElementById('aboutModalOverlay').addEventListener('click', function (e) {
         if (e.target === this) {
             closeAboutModal();
+        }
+    });
+
+    document.getElementById('categoriesModalOverlay').addEventListener('click', function (e) {
+        if (e.target === this) {
+            closeCategoriesModal();
         }
     });
 
@@ -764,6 +926,7 @@ function setupEventListeners() {
             closeMenu();
             closeNotesModal();
             closeAboutModal();
+            closeCategoriesModal();
             if (expandedCard) {
                 expandedCard.classList.remove('expanded');
                 expandedCard = null;
@@ -826,6 +989,9 @@ function initializeApp() {
     loadBookmarks();
     loadNotes();
 
+    // Initialize categories - show all by default
+    Object.keys(categoryColors).forEach(category => activeCategories.add(category));
+
     // Load catechism data
     loadCatechism();
 
@@ -847,3 +1013,5 @@ window.openNotesModal = openNotesModal;
 window.copyToClipboard = copyToClipboard;
 window.openAboutModal = openAboutModal;
 window.closeAboutModal = closeAboutModal;
+window.openCategoriesModal = openCategoriesModal;
+window.closeCategoriesModal = closeCategoriesModal;
