@@ -25,20 +25,16 @@ function debounce(func, wait) {
     };
 }
 
-function formatEmailSubject(questionData) {
-    return `Catechism Q${questionData.id}: ${questionData.question}`;
-}
-
-function formatEmailBody(questionData, userNote = '') {
-    let body = `Q${questionData.id}: ${questionData.question}\n\n`;
-    body += `A: ${questionData.answer}\n\n`;
+function formatCopyText(questionData, userNote = '') {
+    let text = `Q${questionData.id}: ${questionData.question}\n\n`;
+    text += `A: ${questionData.answer}`;
 
     if (userNote) {
-        body += `My Notes:\n${userNote}\n\n`;
+        text += `\n\nMy Notes:\n${userNote}`;
     }
 
-    body += `---\nFrom Children's Catechism App`;
-    return body;
+    text += `\n\n---\nFrom Children's Catechism`;
+    return text;
 }
 
 // ===== DATA LOADING =====
@@ -130,12 +126,12 @@ function createQuestionElement(questionData) {
                     </svg>
                     <span>Note</span>
                 </button>
-                <a class="action-btn email-btn" href="#" onclick="event.stopPropagation(); shareViaEmail(${questionData.id})" title="Share via email">
+                <button class="action-btn copy-btn" onclick="event.stopPropagation(); copyToClipboard(${questionData.id})" title="Copy question text">
                     <svg class="action-icon" viewBox="0 0 24 24">
-                        <path d="M20,8L12,13L4,8V6L12,11L20,6M20,4H4C2.89,4 2,4.89 2,6V18A2,2 0 0,0 4,20H20A2,2 0 0,0 22,18V6C22,4.89 21.1,4 20,4Z" />
+                        <path d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z" />
                     </svg>
-                    <span>Email</span>
-                </a>
+                    <span>Copy</span>
+                </button>
             </div>
         </div>
     `;
@@ -462,17 +458,60 @@ function saveNote() {
     closeNotesModal();
 }
 
-// ===== EMAIL SHARING =====
-function shareViaEmail(questionId) {
+// ===== CLIPBOARD SHARING =====
+async function copyToClipboard(questionId) {
     const questionData = catechismData.questions.find(q => q.id === questionId);
     if (!questionData) return;
 
     const userNote = notes[questionId] || '';
-    const subject = encodeURIComponent(formatEmailSubject(questionData));
-    const body = encodeURIComponent(formatEmailBody(questionData, userNote));
+    const formattedText = formatCopyText(questionData, userNote);
 
-    const mailtoUrl = `mailto:?subject=${subject}&body=${body}`;
-    window.location.href = mailtoUrl;
+    try {
+        await navigator.clipboard.writeText(formattedText);
+        showCopyFeedback(questionId);
+    } catch (err) {
+        // Fallback for older browsers
+        const textArea = document.createElement('textarea');
+        textArea.value = formattedText;
+        document.body.appendChild(textArea);
+        textArea.select();
+        try {
+            document.execCommand('copy');
+            showCopyFeedback(questionId);
+        } catch (fallbackErr) {
+            console.error('Failed to copy text:', fallbackErr);
+            alert('Could not copy to clipboard. Please try again.');
+        }
+        document.body.removeChild(textArea);
+    }
+}
+
+function formatCopyText(questionData, userNote = '') {
+    let text = `Q${questionData.id}: ${questionData.question}\n\n`;
+    text += `A: ${questionData.answer}`;
+
+    if (userNote) {
+        text += `\n\nMy Notes:\n${userNote}`;
+    }
+
+    text += `\n\n---\nFrom Children's Catechism`;
+    return text;
+}
+
+function showCopyFeedback(questionId) {
+    const card = document.querySelector(`[data-question-id="${questionId}"]`);
+    const copyBtn = card.querySelector('.copy-btn');
+    const originalText = copyBtn.querySelector('span').textContent;
+
+    // Show success state
+    copyBtn.classList.add('copied');
+    copyBtn.querySelector('span').textContent = 'Copied!';
+
+    // Reset after 2 seconds
+    setTimeout(() => {
+        copyBtn.classList.remove('copied');
+        copyBtn.querySelector('span').textContent = originalText;
+    }, 2000);
 }
 
 // ===== UI UPDATES =====
@@ -781,4 +820,4 @@ window.toggleCardExpansion = toggleCardExpansion;
 window.toggleFavorite = toggleFavorite;
 window.toggleBookmark = toggleBookmark;
 window.openNotesModal = openNotesModal;
-window.shareViaEmail = shareViaEmail;
+window.copyToClipboard = copyToClipboard;

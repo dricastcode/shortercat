@@ -519,8 +519,9 @@ body {
 .action-btn.note-btn:hover { background: #2ed573; color: white; }
 .action-btn.note-btn.active { background: #2ed573; color: white; }
 
-.action-btn.email-btn { border-color: #ffa502; color: #ffa502; }
-.action-btn.email-btn:hover { background: #ffa502; color: white; }
+.action-btn.copy-btn { border-color: #ffa502; color: #ffa502; }
+.action-btn.copy-btn:hover { background: #ffa502; color: white; }
+.action-btn.copy-btn.copied { background: #2ed573; border-color: #2ed573; color: white; }
 
 .action-icon {
     width: 16px;
