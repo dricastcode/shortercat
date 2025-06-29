@@ -4,7 +4,7 @@
     "start_url": "./index.html",
     "display": "standalone",
     "background_color": "#ffffff",
-    "theme_color": "#4a90e2",
+    "theme_color": "#1a1a1a",
     "description": "A digital version of the Children's Shorter Catechism for easy access and learning.",
     "lang": "en-US",
     "icons": [
