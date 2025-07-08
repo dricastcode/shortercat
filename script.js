@@ -41,11 +41,11 @@ function debounce(func, wait) {
 function formatCopyText(questionData, userNote = '') {
     let text = `Q${questionData.id}: ${questionData.question}\n\n`;
     text += `A: ${questionData.answer}`;
-
+    
     if (userNote) {
         text += `\n\nMy Notes:\n${userNote}`;
     }
-
+    
     text += `\n\n---\nFrom Children's Catechism`;
     return text;
 }
@@ -55,21 +55,22 @@ async function loadCatechism() {
     try {
         showLoadingState();
         const response = await fetch('./data/childrens-catechism.json');
-
+        
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
-
+        
         catechismData = await response.json();
-
+        
         if (!catechismData.questions || !Array.isArray(catechismData.questions)) {
             throw new Error('Invalid data format');
         }
-
+        
         renderQuestions();
         initializeSearch();
+        initializeCategories(); // Initialize categories after data is loaded
         hideLoadingState();
-
+        
     } catch (error) {
         console.error('Error loading catechism data:', error);
         showErrorState();
@@ -98,7 +99,7 @@ function hideLoadingState() {
 function renderQuestions() {
     const container = document.getElementById('questionsContainer');
     container.innerHTML = '';
-
+    
     catechismData.questions.forEach(questionData => {
         const questionElement = createQuestionElement(questionData);
         container.appendChild(questionElement);
@@ -110,15 +111,15 @@ function createQuestionElement(questionData) {
     qaItem.className = 'qa-item';
     qaItem.setAttribute('data-question-id', questionData.id);
     qaItem.setAttribute('data-category', questionData.category);
-
+    
     const isFavorited = favorites.some(f => f.id === questionData.id);
     const isBookmarked = bookmarks.some(b => b.id === questionData.id);
     const hasNote = notes[questionData.id];
-
+    
     // Set category color for left border
     const categoryColor = categoryColors[questionData.category] || '#4a90e2';
     qaItem.style.borderLeftColor = categoryColor;
-
+    
     qaItem.innerHTML = `
         <div class="qa-content" onclick="toggleCardExpansion(${questionData.id})">
             <div class="question">Q${questionData.id}: ${questionData.question}</div>
@@ -153,19 +154,19 @@ function createQuestionElement(questionData) {
             </div>
         </div>
     `;
-
+    
     return qaItem;
 }
 
 // ===== CARD EXPANSION =====
 function toggleCardExpansion(questionId) {
     const card = document.querySelector(`[data-question-id="${questionId}"]`);
-
+    
     // Close any other expanded card
     if (expandedCard && expandedCard !== card) {
         expandedCard.classList.remove('expanded');
     }
-
+    
     // Toggle current card
     if (card.classList.contains('expanded')) {
         card.classList.remove('expanded');
@@ -183,21 +184,21 @@ function switchTab(tabName) {
         btn.classList.remove('active');
     });
     document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
-
+    
     // Update tab panes
     document.querySelectorAll('.tab-pane').forEach(pane => {
         pane.classList.remove('active');
     });
     document.getElementById(`${tabName}Pane`).classList.add('active');
-
+    
     currentTab = tabName;
-
+    
     // Collapse any expanded cards when switching tabs
     if (expandedCard) {
         expandedCard.classList.remove('expanded');
         expandedCard = null;
     }
-
+    
     // Update content based on tab and apply category filter
     if (tabName === 'favorites') {
         renderFavorites();
@@ -206,7 +207,7 @@ function switchTab(tabName) {
     } else if (tabName === 'home') {
         filterQuestionsByCategory();
     }
-
+    
     // Clear search when switching tabs
     const searchInput = document.getElementById('searchInput');
     if (searchInput.value) {
@@ -293,7 +294,7 @@ function saveFavorites() {
 
 function toggleFavorite(questionId) {
     const index = favorites.findIndex(f => f.id === questionId);
-
+    
     if (index === -1) {
         const questionData = catechismData.questions.find(q => q.id === questionId);
         if (questionData) {
@@ -307,7 +308,7 @@ function toggleFavorite(questionId) {
     } else {
         favorites.splice(index, 1);
     }
-
+    
     saveFavorites();
     updateFavoritesUI();
     updateCardButtons();
@@ -323,28 +324,28 @@ function updateFavoritesUI() {
 function renderFavorites() {
     const container = document.getElementById('favoritesContainer');
     const emptyState = document.getElementById('emptyFavorites');
-
+    
     // Filter favorites by active categories
     const filteredFavorites = favorites.filter(favoriteData => {
         const questionData = catechismData.questions.find(q => q.id === favoriteData.id);
         return activeCategories.size === 0 || activeCategories.has(questionData.category);
     });
-
+    
     if (filteredFavorites.length === 0) {
         container.style.display = 'none';
         emptyState.style.display = 'block';
         // Update empty state message based on filter
-        const emptyMessage = activeCategories.size === 0 ?
+        const emptyMessage = activeCategories.size === 0 ? 
             'No favorites yet. Click the heart icon on any question to add it to your favorites!' :
             'No favorites in the selected categories. Try selecting different categories or add more favorites!';
         emptyState.querySelector('p').textContent = emptyMessage;
         return;
     }
-
+    
     container.style.display = 'block';
     emptyState.style.display = 'none';
     container.innerHTML = '';
-
+    
     filteredFavorites.forEach(favoriteData => {
         const questionData = catechismData.questions.find(q => q.id === favoriteData.id);
         if (questionData) {
@@ -376,7 +377,7 @@ function saveBookmarks() {
 
 function toggleBookmark(questionId) {
     const index = bookmarks.findIndex(b => b.id === questionId);
-
+    
     if (index === -1) {
         const questionData = catechismData.questions.find(q => q.id === questionId);
         if (questionData) {
@@ -390,7 +391,7 @@ function toggleBookmark(questionId) {
     } else {
         bookmarks.splice(index, 1);
     }
-
+    
     saveBookmarks();
     updateBookmarksUI();
     updateCardButtons();
@@ -406,28 +407,28 @@ function updateBookmarksUI() {
 function renderBookmarks() {
     const container = document.getElementById('bookmarksContainer');
     const emptyState = document.getElementById('emptyBookmarks');
-
+    
     // Filter bookmarks by active categories
     const filteredBookmarks = bookmarks.filter(bookmarkData => {
         const questionData = catechismData.questions.find(q => q.id === bookmarkData.id);
         return activeCategories.size === 0 || activeCategories.has(questionData.category);
     });
-
+    
     if (filteredBookmarks.length === 0) {
         container.style.display = 'none';
         emptyState.style.display = 'block';
         // Update empty state message based on filter
-        const emptyMessage = activeCategories.size === 0 ?
+        const emptyMessage = activeCategories.size === 0 ? 
             'No bookmarks yet. Click the bookmark icon on any question to save your reading progress!' :
             'No bookmarks in the selected categories. Try selecting different categories or add more bookmarks!';
         emptyState.querySelector('p').textContent = emptyMessage;
         return;
     }
-
+    
     container.style.display = 'block';
     emptyState.style.display = 'none';
     container.innerHTML = '';
-
+    
     filteredBookmarks.forEach(bookmarkData => {
         const questionData = catechismData.questions.find(q => q.id === bookmarkData.id);
         if (questionData) {
@@ -459,22 +460,22 @@ function saveNotes() {
 function openNotesModal(questionId) {
     const questionData = catechismData.questions.find(q => q.id === questionId);
     if (!questionData) return;
-
+    
     const modal = document.getElementById('notesModal');
     const overlay = document.getElementById('notesModalOverlay');
     const title = document.getElementById('notesModalTitle');
     const questionDiv = document.getElementById('notesModalQuestion');
     const textarea = document.getElementById('notesTextarea');
-
+    
     title.textContent = `Note for Q${questionData.id}`;
     questionDiv.innerHTML = `
         <strong>Q${questionData.id}: ${questionData.question}</strong><br>
         A: ${questionData.answer}
     `;
-
+    
     textarea.value = notes[questionId] || '';
     textarea.setAttribute('data-question-id', questionId);
-
+    
     overlay.classList.add('active');
     setTimeout(() => textarea.focus(), 100);
 }
@@ -512,19 +513,19 @@ function closeCategoriesModal() {
 function populateCategoriesList() {
     const categoriesList = document.getElementById('categoriesList');
     const categories = catechismData ? Object.keys(categoryColors) : [];
-
+    
     categoriesList.innerHTML = '';
-
+    
     categories.forEach(category => {
         const count = catechismData.questions.filter(q => q.category === category).length;
-        const isActive = activeCategories.size === 0 || activeCategories.has(category);
+        const isActive = activeCategories.has(category);
         const color = categoryColors[category];
-
+        
         const categoryItem = document.createElement('div');
         categoryItem.className = `category-item ${isActive ? 'active' : ''}`;
         categoryItem.style.setProperty('--category-color', color);
         categoryItem.setAttribute('data-category', category);
-
+        
         categoryItem.innerHTML = `
             <div class="category-checkbox ${isActive ? 'checked' : ''}" style="border-color: ${color}"></div>
             <div class="category-color-indicator" style="background-color: ${color}"></div>
@@ -533,25 +534,44 @@ function populateCategoriesList() {
                 <div class="category-count">${count} questions</div>
             </div>
         `;
-
+        
         categoryItem.addEventListener('click', () => toggleCategory(category));
         categoriesList.appendChild(categoryItem);
     });
+    
+    updateCategoryFilterStatus();
 }
 
 function toggleCategory(category) {
     const categoryItem = document.querySelector(`[data-category="${category}"]`);
     const checkbox = categoryItem.querySelector('.category-checkbox');
-
+    
     if (activeCategories.has(category)) {
         activeCategories.delete(category);
         categoryItem.classList.remove('active');
         checkbox.classList.remove('checked');
+        
+        // Add visual feedback for deactivation
+        categoryItem.style.transform = 'scale(0.95)';
+        setTimeout(() => {
+            categoryItem.style.transform = '';
+        }, 150);
     } else {
         activeCategories.add(category);
         categoryItem.classList.add('active');
         checkbox.classList.add('checked');
+        
+        // Add visual feedback for activation
+        categoryItem.style.transform = 'scale(1.05)';
+        setTimeout(() => {
+            categoryItem.style.transform = 'scale(1.02)';
+        }, 150);
     }
+    
+    updateCategoryFilterStatus();
+    
+    // Apply filter immediately for visual feedback
+    filterQuestionsByCategory();
 }
 
 function selectAllCategories() {
@@ -559,38 +579,144 @@ function selectAllCategories() {
     activeCategories.clear();
     categories.forEach(category => activeCategories.add(category));
     populateCategoriesList();
+    filterQuestionsByCategory();
+}
+
+function updateCategoryFilterStatus() {
+    const totalCategories = Object.keys(categoryColors).length;
+    const activeCount = activeCategories.size;
+    
+    // Create status indicator if it doesn't exist
+    let statusIndicator = document.getElementById('categoryFilterStatus');
+    if (!statusIndicator) {
+        statusIndicator = document.createElement('div');
+        statusIndicator.id = 'categoryFilterStatus';
+        statusIndicator.className = 'categories-filter-status';
+        document.body.appendChild(statusIndicator);
+    }
+    
+    if (activeCount === 0) {
+        statusIndicator.textContent = '🚫 No categories selected';
+        statusIndicator.style.borderColor = '#ff6b6b';
+        statusIndicator.style.color = '#ff6b6b';
+        statusIndicator.style.opacity = '1';
+        statusIndicator.style.transform = 'translateY(0)';
+    } else if (activeCount === totalCategories) {
+        // All categories active - hide indicator
+        statusIndicator.style.opacity = '0';
+        statusIndicator.style.transform = 'translateY(20px)';
+    } else {
+        statusIndicator.textContent = `📂 ${activeCount}/${totalCategories} categories`;
+        statusIndicator.style.borderColor = '#4a90e2';
+        statusIndicator.style.color = '#4a90e2';
+        statusIndicator.style.opacity = '1';
+        statusIndicator.style.transform = 'translateY(0)';
+    }
 }
 
 function applyCategoryFilter() {
-    // If no categories selected, show all
+    // If no categories selected, show warning and don't close
     if (activeCategories.size === 0) {
-        Object.keys(categoryColors).forEach(category => activeCategories.add(category));
+        alert('Please select at least one category to view questions.');
+        return;
     }
-
+    
     // Apply filter to current view
     filterQuestionsByCategory();
     closeCategoriesModal();
+    
+    // Show brief confirmation
+    const statusIndicator = document.getElementById('categoryFilterStatus');
+    if (statusIndicator && activeCategories.size < Object.keys(categoryColors).length) {
+        statusIndicator.style.transform = 'translateY(0) scale(1.1)';
+        setTimeout(() => {
+            statusIndicator.style.transform = 'translateY(0) scale(1)';
+        }, 200);
+    }
 }
 
 function filterQuestionsByCategory() {
     if (currentTab === 'home') {
-        // Filter home questions
-        allQuestions.forEach(item => {
+        // Filter home questions with animation
+        allQuestions.forEach((item, index) => {
             const questionData = catechismData.questions.find(q => q.id === item.id);
-            const shouldShow = activeCategories.size === 0 ||
-                activeCategories.has(questionData.category);
-            item.element.style.display = shouldShow ? 'block' : 'none';
+            const shouldShow = activeCategories.size === 0 || 
+                             activeCategories.has(questionData.category);
+            
+            if (shouldShow) {
+                // Show with slight delay for staggered animation
+                setTimeout(() => {
+                    item.element.style.display = 'block';
+                    item.element.style.opacity = '0';
+                    item.element.style.transform = 'translateY(20px)';
+                    
+                    setTimeout(() => {
+                        item.element.style.opacity = '1';
+                        item.element.style.transform = 'translateY(0)';
+                    }, 50);
+                }, index * 20);
+            } else {
+                // Hide with animation
+                item.element.style.opacity = '0';
+                item.element.style.transform = 'translateY(-10px)';
+                setTimeout(() => {
+                    item.element.style.display = 'none';
+                }, 200);
+            }
         });
     } else if (currentTab === 'favorites') {
         renderFavorites();
     } else if (currentTab === 'bookmarks') {
         renderBookmarks();
     }
-
+    
     // Update search if there's an active search
     const searchInput = document.getElementById('searchInput');
     if (searchInput.value.trim()) {
         performSearch(searchInput.value);
+    }
+    
+    // Update empty state messages
+    updateEmptyStateMessages();
+}
+
+function updateEmptyStateMessages() {
+    const activeCount = activeCategories.size;
+    const totalCount = Object.keys(categoryColors).length;
+    
+    if (activeCount === 0) {
+        // Update all empty states for no categories
+        document.querySelectorAll('.empty-state p').forEach(p => {
+            p.textContent = 'No categories selected. Please select categories from the menu to view questions.';
+        });
+    } else if (activeCount < totalCount) {
+        // Update empty states for filtered categories
+        const emptyFavorites = document.getElementById('emptyFavorites');
+        const emptyBookmarks = document.getElementById('emptyBookmarks');
+        
+        if (emptyFavorites) {
+            emptyFavorites.querySelector('p').textContent = 
+                'No favorites in the selected categories. Try selecting different categories or add more favorites!';
+        }
+        
+        if (emptyBookmarks) {
+            emptyBookmarks.querySelector('p').textContent = 
+                'No bookmarks in the selected categories. Try selecting different categories or add more bookmarks!';
+        }
+    } else {
+        // Reset to default messages
+        const emptyFavorites = document.getElementById('emptyFavorites');
+        const emptyBookmarks = document.getElementById('emptyBookmarks');
+        
+        if (emptyFavorites) {
+            emptyFavorites.querySelector('p').textContent = 
+                'No favorites yet. Click the heart icon on any question to add it to your favorites!';
+        }
+        
+        if (emptyBookmarks) {
+            emptyBookmarks.querySelector('p').textContent = 
+                'No bookmarks yet. Click the bookmark icon on any question to save your reading progress!';
+        }
     }
 }
 
@@ -598,13 +724,13 @@ function saveNote() {
     const textarea = document.getElementById('notesTextarea');
     const questionId = parseInt(textarea.getAttribute('data-question-id'));
     const noteText = textarea.value.trim();
-
+    
     if (noteText) {
         notes[questionId] = noteText;
     } else {
         delete notes[questionId];
     }
-
+    
     saveNotes();
     updateCardButtons();
     closeNotesModal();
@@ -614,10 +740,10 @@ function saveNote() {
 async function copyToClipboard(questionId) {
     const questionData = catechismData.questions.find(q => q.id === questionId);
     if (!questionData) return;
-
+    
     const userNote = notes[questionId] || '';
     const formattedText = formatCopyText(questionData, userNote);
-
+    
     try {
         await navigator.clipboard.writeText(formattedText);
         showCopyFeedback(questionId);
@@ -641,11 +767,11 @@ async function copyToClipboard(questionId) {
 function formatCopyText(questionData, userNote = '') {
     let text = `Q${questionData.id}: ${questionData.question}\n\n`;
     text += `A: ${questionData.answer}`;
-
+    
     if (userNote) {
         text += `\n\nMy Notes:\n${userNote}`;
     }
-
+    
     text += `\n\n---\nFrom Children's Catechism`;
     return text;
 }
@@ -654,11 +780,11 @@ function showCopyFeedback(questionId) {
     const card = document.querySelector(`[data-question-id="${questionId}"]`);
     const copyBtn = card.querySelector('.copy-btn');
     const originalText = copyBtn.querySelector('span').textContent;
-
+    
     // Show success state
     copyBtn.classList.add('copied');
     copyBtn.querySelector('span').textContent = 'Copied!';
-
+    
     // Reset after 2 seconds
     setTimeout(() => {
         copyBtn.classList.remove('copied');
@@ -670,15 +796,15 @@ function showCopyFeedback(questionId) {
 function updateCardButtons() {
     document.querySelectorAll('.qa-item').forEach(card => {
         const questionId = parseInt(card.dataset.questionId);
-
+        
         const favoriteBtn = card.querySelector('.favorite-btn');
         const bookmarkBtn = card.querySelector('.bookmark-btn');
         const noteBtn = card.querySelector('.note-btn');
-
+        
         const isFavorited = favorites.some(f => f.id === questionId);
         const isBookmarked = bookmarks.some(b => b.id === questionId);
         const hasNote = notes[questionId];
-
+        
         favoriteBtn.classList.toggle('active', isFavorited);
         bookmarkBtn.classList.toggle('active', isBookmarked);
         noteBtn.classList.toggle('active', !!hasNote);
@@ -717,26 +843,26 @@ function initializeSearch() {
 function performSearch(query) {
     const searchResults = document.getElementById('searchResults');
     let questionsToSearch = [];
-
+    
     // Determine which questions to search based on current tab and category filter
     if (currentTab === 'home') {
         questionsToSearch = allQuestions.filter(q => {
             const questionData = catechismData.questions.find(qd => qd.id === q.id);
-            return activeCategories.size === 0 || activeCategories.has(questionData.category);
+            return questionData && (activeCategories.size === 0 || activeCategories.has(questionData.category));
         });
     } else if (currentTab === 'favorites') {
         const favoriteIds = favorites.map(f => f.id);
         questionsToSearch = allQuestions.filter(q => {
             const questionData = catechismData.questions.find(qd => qd.id === q.id);
-            return favoriteIds.includes(q.id) &&
-                (activeCategories.size === 0 || activeCategories.has(questionData.category));
+            return questionData && favoriteIds.includes(q.id) && 
+                   (activeCategories.size === 0 || activeCategories.has(questionData.category));
         });
     } else if (currentTab === 'bookmarks') {
         const bookmarkIds = bookmarks.map(b => b.id);
         questionsToSearch = allQuestions.filter(q => {
             const questionData = catechismData.questions.find(qd => qd.id === q.id);
-            return bookmarkIds.includes(q.id) &&
-                (activeCategories.size === 0 || activeCategories.has(questionData.category));
+            return questionData && bookmarkIds.includes(q.id) && 
+                   (activeCategories.size === 0 || activeCategories.has(questionData.category));
         });
     }
 
@@ -764,10 +890,12 @@ function performSearch(query) {
             const questionData = catechismData.questions.find(q => q.id === item.id);
             const questionMatch = item.question.toLowerCase().includes(lowerQuery);
             const answerMatch = item.answer.toLowerCase().includes(lowerQuery);
-            const inActiveCategory = activeCategories.size === 0 || activeCategories.has(questionData.category);
+            const inActiveCategory = questionData && (activeCategories.size === 0 || activeCategories.has(questionData.category));
 
             if ((questionMatch || answerMatch) && inActiveCategory) {
                 item.element.style.display = 'block';
+                item.element.style.opacity = '1';
+                item.element.style.transform = 'translateY(0)';
                 visibleCount++;
                 highlightText(item.element, query);
             } else {
@@ -781,16 +909,16 @@ function performSearch(query) {
             const answerMatch = item.answer.toLowerCase().includes(lowerQuery);
             return questionMatch || answerMatch;
         });
-
+        
         visibleCount = filteredQuestions.length;
-
+        
         // Re-render filtered results
-        const container = currentTab === 'favorites' ?
-            document.getElementById('favoritesContainer') :
+        const container = currentTab === 'favorites' ? 
+            document.getElementById('favoritesContainer') : 
             document.getElementById('bookmarksContainer');
-
+        
         container.innerHTML = '';
-
+        
         filteredQuestions.forEach(item => {
             const questionData = catechismData.questions.find(q => q.id === item.id);
             const questionElement = createQuestionElement(questionData);
@@ -801,7 +929,16 @@ function performSearch(query) {
 
     // Update search results
     if (visibleCount === 0) {
-        searchResults.textContent = 'No questions found matching your search.';
+        const activeCount = activeCategories.size;
+        const totalCount = Object.keys(categoryColors).length;
+        
+        if (activeCount === 0) {
+            searchResults.textContent = 'No categories selected. Please select categories to search.';
+        } else if (activeCount < totalCount) {
+            searchResults.textContent = 'No questions found in selected categories.';
+        } else {
+            searchResults.textContent = 'No questions found matching your search.';
+        }
     } else if (visibleCount === 1) {
         searchResults.textContent = '1 question found';
     } else {
@@ -858,7 +995,7 @@ function setupEventListeners() {
             setTheme(theme);
         });
     });
-
+    
     // Scroll to top functionality
     document.getElementById('scrollToTop').addEventListener('click', scrollToTop);
     window.addEventListener('scroll', debounce(updateScrollToTop, 100));
@@ -867,7 +1004,7 @@ function setupEventListeners() {
     const searchInput = document.getElementById('searchInput');
     const clearButton = document.getElementById('clearSearch');
 
-    searchInput.addEventListener('input', debounce(function (e) {
+    searchInput.addEventListener('input', debounce(function(e) {
         performSearch(e.target.value);
     }, 300));
 
@@ -880,39 +1017,39 @@ function setupEventListeners() {
     document.getElementById('notesModalClose').addEventListener('click', closeNotesModal);
     document.getElementById('notesModalCancel').addEventListener('click', closeNotesModal);
     document.getElementById('notesModalSave').addEventListener('click', saveNote);
-
+    
     // About modal
     document.getElementById('aboutBtn').addEventListener('click', openAboutModal);
     document.getElementById('aboutModalClose').addEventListener('click', closeAboutModal);
     document.getElementById('aboutModalOk').addEventListener('click', closeAboutModal);
-
+    
     // Categories modal
     document.getElementById('categoriesBtn').addEventListener('click', openCategoriesModal);
     document.getElementById('categoriesModalClose').addEventListener('click', closeCategoriesModal);
     document.getElementById('categoriesSelectAll').addEventListener('click', selectAllCategories);
     document.getElementById('categoriesApply').addEventListener('click', applyCategoryFilter);
-
+    
     // Close modals on overlay click
-    document.getElementById('notesModalOverlay').addEventListener('click', function (e) {
+    document.getElementById('notesModalOverlay').addEventListener('click', function(e) {
         if (e.target === this) {
             closeNotesModal();
         }
     });
-
-    document.getElementById('aboutModalOverlay').addEventListener('click', function (e) {
+    
+    document.getElementById('aboutModalOverlay').addEventListener('click', function(e) {
         if (e.target === this) {
             closeAboutModal();
         }
     });
-
-    document.getElementById('categoriesModalOverlay').addEventListener('click', function (e) {
+    
+    document.getElementById('categoriesModalOverlay').addEventListener('click', function(e) {
         if (e.target === this) {
             closeCategoriesModal();
         }
     });
 
     // Close expanded cards when clicking outside
-    document.addEventListener('click', function (e) {
+    document.addEventListener('click', function(e) {
         if (!e.target.closest('.qa-item') && expandedCard) {
             expandedCard.classList.remove('expanded');
             expandedCard = null;
@@ -920,7 +1057,7 @@ function setupEventListeners() {
     });
 
     // Keyboard shortcuts
-    document.addEventListener('keydown', function (e) {
+    document.addEventListener('keydown', function(e) {
         // Escape to close menus and modals
         if (e.key === 'Escape') {
             closeMenu();
@@ -941,7 +1078,7 @@ function setupEventListeners() {
 
         // Tab shortcuts
         if (e.ctrlKey || e.metaKey) {
-            switch (e.key) {
+            switch(e.key) {
                 case '1':
                     e.preventDefault();
                     switchTab('home');
@@ -959,7 +1096,7 @@ function setupEventListeners() {
 
         // Theme shortcuts
         if (e.altKey) {
-            switch (e.key) {
+            switch(e.key) {
                 case '1':
                     e.preventDefault();
                     setTheme('light');
@@ -989,9 +1126,6 @@ function initializeApp() {
     loadBookmarks();
     loadNotes();
 
-    // Initialize categories - show all by default
-    Object.keys(categoryColors).forEach(category => activeCategories.add(category));
-
     // Load catechism data
     loadCatechism();
 
@@ -1000,6 +1134,14 @@ function initializeApp() {
 
     // Setup all event listeners
     setupEventListeners();
+}
+
+// Initialize categories after data is loaded
+function initializeCategories() {
+    // Start with all categories active
+    activeCategories.clear();
+    Object.keys(categoryColors).forEach(category => activeCategories.add(category));
+    updateCategoryFilterStatus();
 }
 
 // ===== ENTRY POINT =====
